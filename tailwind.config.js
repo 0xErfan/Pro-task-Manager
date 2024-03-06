@@ -26,7 +26,11 @@ export default {
                 regular2: "0 4px 15px 2px"
             },
             colors: {
-
+                "primary": "#8875FF",
+                "milky": "rgba(255, 255, 255, 87%)",
+                "border": "#979797",
+                "primary-gray": "#363636",
+                "primary-black": "#121212"
             },
             fontFamily: {
             }
