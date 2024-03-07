@@ -1,9 +1,9 @@
 import React from 'react'
-import Button from '../Button'
+import Button from './Button'
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { nextPage, prevePage, changeByMount } from '../../Redux/Futures/OnbordingSlice';
+import { nextPage, prevePage, changeByMount } from '../Redux/Futures/OnbordingSlice';
 
 
 export default function Onbording() {
@@ -29,18 +29,18 @@ export default function Onbording() {
 
             {
                 page < 3 && <div className='flex items-center justify-center my-12 gap-2'>
-                    <span className={`w-6 h-1 ${page == 2 ? "bg-milky" : "bg-milky-dark"} rounded-md`}></span>
-                    <span className={`w-6 h-1 ${page == 1 ? "bg-milky" : "bg-milky-dark"} rounded-md`}></span>
                     <span className={`w-6 h-1 ${page == 0 ? "bg-milky" : "bg-milky-dark"} rounded-md`}></span>
+                    <span className={`w-6 h-1 ${page == 1 ? "bg-milky" : "bg-milky-dark"} rounded-md`}></span>
+                    <span className={`w-6 h-1 ${page == 2 ? "bg-milky" : "bg-milky-dark"} rounded-md`}></span>
                 </div>
             }
 
             <h4 className='font-lato-bold font-bold text-[32px] text-milky text-center mb-10'>{currentPageData?.title}</h4>
             <h6 className='font-lato text-[16px] text-milky text-center'>{currentPageData?.text}</h6>
 
-            <div className={`flex items-center ${page == 3 ? "flex-col gap-4" : "gap-34"} justify-between absolute bottom-2 left-0 p-5 w-full`}>
-                {<Button data={{ text: page + 1 == 3 ? "GET STARTED" : "NEXT", fn: nextPageHandler }} />}
+            <div className={`flex items-center ${page == 3 ? "flex-col-reverse gap-4" : "gap-34"} justify-between absolute bottom-2 left-0 p-5 w-full`}>
                 {page > 0 && <Button data={{ text: page == 3 ? "Create Account" : "BACK", color: 1, border: page == 3, fn: prevePageHandler }} />}
+                {<Button data={{ text: page == 2 ? "GET STARTED" : page == 3 ? "Login" : "NEXT", fn: nextPageHandler }} />}
             </div>
         </section>
 

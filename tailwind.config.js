@@ -30,6 +30,7 @@ export default {
                 "milky": "rgba(255, 255, 255, 87%)",
                 "milky-dark": "rgba(255, 255, 255, 44%)",
                 "border": "#979797",
+                "dark-light": "#1D1D1D",
                 "primary-gray": "#363636",
                 "primary-black": "#121212"
             },

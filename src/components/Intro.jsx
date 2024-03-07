@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Onbording from './Onbording/Onbording'
+import Onbording from './Onbording'
 
 export default function Intro() {
 
