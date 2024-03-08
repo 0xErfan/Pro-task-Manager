@@ -1,13 +1,4 @@
 import { setToastData } from "./Redux/Futures/userSlice"
-import supabase from "./client"
-
-const fetchData = async userData => {
-    try {
-        const { error } = await supabase.from("users").insert(userData)
-        if (error) throw new Error(error.message)
-
-    } catch (error) { console.log(error) }
-}
 
 const showToast = (() => {
     //create a closure around the timeout variable to control user spams(:
@@ -18,13 +9,26 @@ const showToast = (() => {
         dispatch(setToastData({ text, status, showToast: 1 }));
 
         timeout = setTimeout(() => {
-            dispatch(setToastData({ showToast: false }));
+            dispatch(setToastData({ showToast: false, status }));
         }, delay);
     };
 })();
 
+const setCookie = (data, days) => {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "; expires=" + date.toUTCString();
+
+    document.cookie = `userData=${data};${expires};path=/;`
+}
+
+const getCookie = () => {
+    const cookie = JSON.parse(document.cookie)
+    return cookie
+}
 
 export {
-    fetchData,
-    showToast
+    showToast,
+    setCookie,
+    getCookie
 }

@@ -4,7 +4,8 @@ import Input from '../components/Input'
 import Button from "../components/Button"
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchData, showToast } from "../utils"
+import { showToast } from "../utils"
+import supabase from "../client"
 
 export default function Register() {
 
@@ -16,19 +17,33 @@ export default function Register() {
     const isOnline = useSelector(state => state.user.isOnline)
     const active = password.trim().length > 7 && userName.trim().length > 3 && password == repeatPassword
 
-    const formSubmit = () => {
+    const formSubmit = async () => {
+
         if (!isOnline) {
             showToast(dispatch, "Check your internet connection!", 0)
             return
         }
 
-        const newUserData = {
-            name: userName,
-            password,
-            todos: []
-        }
+        try {
+            const { error } = await supabase.from("users").insert({ name: userName, password, todos: [] })
 
-        const data = fetchData(newUserData)
+            if (error) {
+                showToast(dispatch, "This username already exist!", 0)
+                throw new Error(error)
+            }
+
+            showToast(dispatch, "Your account registered successfully.", 1)
+            
+            setTimeout(() => {
+                setPassword("")
+                setUserName("")
+                setRepeatPassword("")
+                navigate("/login")
+            }, 2000);
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
