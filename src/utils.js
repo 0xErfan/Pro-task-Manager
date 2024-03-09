@@ -22,10 +22,7 @@ const setCookie = (data, days) => {
     document.cookie = `userData=${data};${expires};path=/;`
 }
 
-const getCookie = () => {
-    const cookie = JSON.parse(document.cookie)
-    return cookie
-}
+const getCookie = () => document.cookie.includes("userData") && JSON.parse(document.cookie.replace("userData=", ""))
 
 export {
     showToast,

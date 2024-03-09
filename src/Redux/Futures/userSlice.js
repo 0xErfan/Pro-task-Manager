@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getCookie } from "../../utils";
 import supabase from "../../client";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -27,7 +26,6 @@ export const userLogin = createAsyncThunk(
     }
 );
 
-
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -39,13 +37,13 @@ const userSlice = createSlice({
     reducers: {
         isOnlineChanger: (state, action) => { state.isOnline = action.payload },
         setToastData: (state, action) => { state.toastData = action.payload },
-        isLoginSetter: (state, action) => state.isLogin = action.payload
+        isLoginSetter: (state, action) => { state.isLogin = action.payload ? true : false, state.userData = action.payload }
     },
     extraReducers: builder => {
         builder
             .addCase(userLogin.fulfilled, (state, action) => {
-                state.toastData = { text: "You logged in successfully", status: 1, showToast: 1 };
                 state.userData = action.payload;
+                location.href = "/"
             })
             .addCase(userLogin.rejected, state => { state.toastData = { text: "Incorrect usrename or password!", status: 0, showToast: 1 } })
     }
