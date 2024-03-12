@@ -128,7 +128,7 @@ export default function AddTodo() {
     )
 }
 
-const categoryList = [
+export const categoryList = [
     {
         catName: "Home", bgColor: "#FFCC80", color: "#A36200", svg: <svg
             width={32}

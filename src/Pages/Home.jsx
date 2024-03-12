@@ -5,8 +5,10 @@ import { isLoginSetter } from '../Redux/Futures/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { CgSortAz } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom'
+import { FaRegCircle } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import Nav from '../components/Nav'
+import { categoryList } from '../components/AddTodo'
 import AddTodo from '../components/AddTodo'
 import OverlayFilter from '../components/OverlayFilter'
 
@@ -48,9 +50,26 @@ export default function Home() {
                                         <option value="today">Today</option>
                                         <option value="tomorrow">Tomorrow</option>
                                     </select>
-                                    {
-                                        userData.todos.map(data => <div key={data.id} >{data.title}</div>)
-                                    }
+                                    <div className='space-y-4 mt-4'>
+                                        {
+                                            userData.todos.map(data => (
+                                                <div key={data.id} className='w-full h-[72px] p-2 bg-primary-gray rounded-md' >
+                                                    <div className='flex items-center gap-3'>
+                                                        <FaRegCircle className='size-5' />
+                                                        <div>
+                                                            <h4 className=' font-lato-bold text-xl'>{data.title}</h4>
+                                                            <p className=' text-milky-dark '>{data.description}</p>
+                                                        </div>
+                                                        <div className='flex items-center justify-start gap-2 ml-auto'>
+                                                            {data.category && <div
+                                                                className='p-1 rounded-sm'
+                                                                style={{ backgroundColor: categoryList.find(cat => cat.catName == data.category).bgColor }} >{data.category}</div>}
+                                                        </div>
+                                                        {data.priority && <div>{data.priority}</div>}
+                                                    </div>
+                                                </div>))
+                                        }
+                                    </div>
                                 </>
                                 :
                                 <div className='mt-40'>
