@@ -49,7 +49,7 @@ export default function Home() {
                                         <option value="tomorrow">Tomorrow</option>
                                     </select>
                                     {
-                                        userData.todos.map(data => <div>{data.title}</div>)
+                                        userData.todos.map(data => <div key={data.id} >{data.title}</div>)
                                     }
                                 </>
                                 :
@@ -60,10 +60,10 @@ export default function Home() {
                                 </div>
                         }
                         <Nav />
+                        <AddTodo visible={addTodoShown} />
                     </section>
                 )
             }
-            <AddTodo visible={addTodoShown} />
             <OverlayFilter />
         </main>
     )

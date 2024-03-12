@@ -5,13 +5,13 @@ import { IoPricetagsOutline } from "react-icons/io5";
 import { HiOutlineFlag } from "react-icons/hi2";
 import { TiTickOutline } from "react-icons/ti";
 import Button from "./Button"
-import userSlice, { newTodoUpdater, setOverlayShow } from '../Redux/Futures/userSlice';
+import userSlice, { newTodoUpdater, setOverlayShow, setAddTodoShow } from '../Redux/Futures/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function AddTodo() {
 
     const titleRef = useRef()
-    const [activePrio, setActivePrio] = useState(1)
+    const [activePrio, setActivePrio] = useState(2)
     const [isPrioShown, setIsPrioShown] = useState(false)
     const [isCategoriesShown, setIsCategoriesShown] = useState(false)
     const [title, setTitle] = useState("")
@@ -25,12 +25,14 @@ export default function AddTodo() {
 
     const chosenPriorities = userData.todos.filter(todo => todo.priority)
 
-    addTodoShow && dispatch(setOverlayShow(true))
+    // addTodoShow && dispatch(setOverlayShow(true))
 
-    useEffect(() => { titleRef.current?.focus(), setActivePrio(allPriorities.find(value => value.key != chosenPriorities.forEach(data => data.priority)).key) }, [addTodoShow])
+    useEffect(() => { titleRef.current?.focus() }, [addTodoShow])
+    useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity")).key) }, [userData.todos])
 
     const addNewTodo = () => {
         const newTodo = {
+            id: Date.now(),
             title,
             description,
             priority: prioChosen ? activePrio : null,
@@ -42,6 +44,10 @@ export default function AddTodo() {
         setTitle("")
         setCategory("Home")
         setDescription("")
+        setCategoryChosen(false)
+        setPrioChosen(false)
+        dispatch(setOverlayShow(false))
+        dispatch(setAddTodoShow(false))
     }
 
     let allPriorities = []
@@ -60,7 +66,7 @@ export default function AddTodo() {
 
     return (
         <>
-            <div className={`z-40 min-h-[228px] bg-primary-gray w-full fixed px-3  transition-all ${addTodoShow ? "bottom-0 opacity-100" : "opacity-0 -bottom-[258px]"}  rounded-r-2xl rounded-l-2xl rounded-b-none`}>
+            <div className={`z-40 min-h-[228px] bg-primary-gray w-full left-0 fixed px-3  transition-all ${addTodoShow ? "bottom-0 opacity-100" : "opacity-0 -bottom-[258px]"}  rounded-t-2xl`}>
                 <h4 className=" flex items-center gap-1 text-[18px] font-lato-bold ch:size-7 p-4 text-primary">Add task <TiTickOutline /></h4>
                 <input
                     value={title}
