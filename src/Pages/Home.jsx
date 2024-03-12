@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Intro from '../components/Intro'
 import { getCookie } from '../utils'
 import { isLoginSetter } from '../Redux/Futures/userSlice'
@@ -15,6 +15,7 @@ export default function Home() {
     const dispatch = useDispatch()
     const { isLogin, userData } = useSelector(state => state.user)
     const navigate = useNavigate()
+    const [addTodoShown, setAddTodoShown] = useState(false)
 
     useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
 
@@ -47,6 +48,9 @@ export default function Home() {
                                         <option value="today">Today</option>
                                         <option value="tomorrow">Tomorrow</option>
                                     </select>
+                                    {
+                                        userData.todos.map(data => <div>{data.title}</div>)
+                                    }
                                 </>
                                 :
                                 <div className='mt-40'>
@@ -55,12 +59,12 @@ export default function Home() {
                                     <p className='text-center text-md text-milky mt-2'>Tap + to add your tasks</p>
                                 </div>
                         }
+                        <Nav />
                     </section>
                 )
             }
-            <Nav />
-            <AddTodo visible={true} />
-            <OverlayFilter visible={true} />
+            <AddTodo visible={addTodoShown} />
+            <OverlayFilter />
         </main>
     )
 }

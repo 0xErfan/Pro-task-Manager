@@ -29,7 +29,8 @@ export default function Login() {
             showToast("Check your internet connection!", 0);
             return;
         }
-        console.log(dispatch(userLogin({ userName, password, showToast, setCookie, reseter })));
+        
+        dispatch(userLogin({ userName, password, showToast, setCookie, reseter }))
     };
 
 
