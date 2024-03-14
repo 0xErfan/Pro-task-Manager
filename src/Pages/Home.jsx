@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Intro from '../components/Intro'
-import { getCookie } from '../utils'
+import { getCookie, getParsedTodos } from '../utils'
 import { isLoginSetter } from '../Redux/Futures/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { CgSortAz } from "react-icons/cg";
@@ -20,11 +20,9 @@ export default function Home() {
     const [addTodoShown, setAddTodoShown] = useState(false)
 
     useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
-    useEffect(() => { setShownTodos(allUserTodos), console.log("setShown") }, [userData.todos])
+    useEffect(() => setShownTodos(allUserTodos), [userData.todos])
 
-
-    let allUserTodos = userData.todos
-    allUserTodos = allUserTodos.map(todo => typeof todo != "string" ? todo : JSON.parse(todo))
+    let allUserTodos = getParsedTodos(userData.todos)
 
     const taskFilterHandler = e => {
         let filteredTodos = [...allUserTodos]
@@ -64,9 +62,9 @@ export default function Home() {
                                             <option value="today">Today</option>
                                             <option value="tomorrow">Tomorrow</option>
                                         </select>
-                                        <div className='space-y-4 mt-4'>
+                                        <div className='space-y-4 mt-4 pb-[120px]'>
                                             {// 1000 because if the todo did't have priority value, it goes to the bottom in sorting
-                                                [...shownTodos].sort((a, b) => (a.priority || 10000) - (b.priority || 10000)).map(data => <Task {...data} />)
+                                                [...shownTodos].sort((a, b) => (a.priority || 10000) - (b.priority || 10000)).map(data => <Task key={data.id} {...data} />)
                                             }</div>
                                     </>
                                     :

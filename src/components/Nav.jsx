@@ -16,7 +16,7 @@ export default function Nav() {
 
     return (
         <>
-            <nav className="navbar fixed mt-10 w-full bg-primary-gray  bottom-0 left-0 right-0 z-20 container">
+            <nav className="navbar fixed w-full mt-10 px-4 bg-primary-gray bottom-0 z-20">
                 <div>
                     <div className='mainNav flex items-center justify-between'>
                         <div className='flex items-center gap-10 text-xs text-center pt-4 ch:py-2'>

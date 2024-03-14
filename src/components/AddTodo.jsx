@@ -5,8 +5,9 @@ import { IoPricetagsOutline } from "react-icons/io5";
 import { HiOutlineFlag } from "react-icons/hi2";
 import { TiTickOutline } from "react-icons/ti";
 import Button from "./Button"
-import userSlice, { newTodoUpdater, setOverlayShow, setAddTodoShow } from '../Redux/Futures/userSlice';
+import { newTodoUpdater, setOverlayShow, setAddTodoShow } from '../Redux/Futures/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { getParsedTodos } from '../utils';
 
 export default function AddTodo() {
 
@@ -23,9 +24,9 @@ export default function AddTodo() {
 
     const dispatch = useDispatch()
 
-    const chosenPriorities = userData.todos.filter(todo => todo.priority)
+    let allUserTodos = getParsedTodos(userData.todos)
 
-    // addTodoShow && dispatch(setOverlayShow(true))
+    const chosenPriorities = allUserTodos.filter(todo => todo.priority)
 
     useEffect(() => { titleRef.current?.focus() }, [addTodoShow])
     useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity")).key) }, [userData.todos])
