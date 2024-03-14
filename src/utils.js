@@ -22,17 +22,26 @@ const setCookie = (data, days) => {
     document.cookie = `userData=${data};${expires};path=/;`
 }
 
+const getCookie = () => document.cookie.includes("userData") && JSON.parse(document.cookie.replace("userData=", ""))
+
 const getParsedTodos = todos => {
     let allUserTodos = todos
     allUserTodos = allUserTodos.map(todo => typeof todo != "string" ? todo : JSON.parse(todo))
     return allUserTodos;
 }
 
-const getCookie = () => document.cookie.includes("userData") && JSON.parse(document.cookie.replace("userData=", ""))
+const padStarter = val => {
+    const newVal = val.toString().padStart(2, "0")
+
+    if (isNaN(newVal)) return "00"
+
+    return newVal
+}
 
 export {
     showToast,
     setCookie,
     getCookie,
-    getParsedTodos
+    getParsedTodos,
+    padStarter
 }

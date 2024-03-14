@@ -8,23 +8,34 @@ import Button from "./Button"
 import { newTodoUpdater, setOverlayShow, setAddTodoShow } from '../Redux/Futures/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getParsedTodos } from '../utils';
+import Slide from './Slide';
 
 export default function AddTodo() {
 
     const titleRef = useRef()
-    const [activePrio, setActivePrio] = useState(2)
-    const [isPrioShown, setIsPrioShown] = useState(false)
-    const [isCategoriesShown, setIsCategoriesShown] = useState(false)
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [prioChosen, setPrioChosen] = useState(false)
-    const [categoryChosen, setCategoryChosen] = useState(false)
-    const [category, setCategory] = useState("Home")
     const { addTodoShow, userData } = useSelector(state => state.user)
 
-    const dispatch = useDispatch()
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+
+    const [activePrio, setActivePrio] = useState(2)
+    const [isPrioShown, setIsPrioShown] = useState(false)
+    const [prioChosen, setPrioChosen] = useState(false)
+
+    const [isTimerShown, setIsTimerShown] = useState(false)
+    const [isTimerAdded, setIsTimerAdded] = useState(false)
+
+    const [isCategoriesShown, setIsCategoriesShown] = useState(false)
+    const [categoryChosen, setCategoryChosen] = useState(false)
+    const [category, setCategory] = useState("Home")
+
+    const [taskTimer, setTaskTimer] = useState({ hour: 0, min: 0, time: "" })
 
     let allUserTodos = getParsedTodos(userData.todos)
+
+    const taskTimerUpdater = (prop, value) => { setTaskTimer({ ...taskTimer, [value]: prop }) }
+
+    const dispatch = useDispatch()
 
     const chosenPriorities = allUserTodos.filter(todo => todo.priority)
 
@@ -32,23 +43,27 @@ export default function AddTodo() {
     useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity")).key) }, [userData.todos])
 
     const addNewTodo = () => {
+
         const newTodo = {
             id: Date.now(),
             title,
             description,
             priority: prioChosen ? activePrio : null,
             category: categoryChosen ? category : null,
-            time: null
+            time: isTimerAdded ? taskTimer : null
         }
+
         dispatch(newTodoUpdater(newTodo))
 
         setTitle("")
         setCategory("Home")
         setDescription("")
         setCategoryChosen(false)
+        setIsTimerAdded(false)
         setPrioChosen(false)
         dispatch(setOverlayShow(false))
         dispatch(setAddTodoShow(false))
+        setTaskTimer({ hour: 0, min: 0, time: "" })
     }
 
     let allPriorities = []
@@ -81,7 +96,7 @@ export default function AddTodo() {
                     className='flex justify-center items-center w-full rounded-md mt-3 pl-6 text-[20px] min-h-10 max-h-24 focus:border focus:border-border bg-transparent placeholder:text-milky-dark outline-none' placeholder='Description' spellCheck={false} />
                 <div className='flex items-center justify-between mt-6 py-4 px-3'>
                     <div className='flex items-center gap-6 justify-between ch:size-6 ch:cursor-pointer'>
-                        <MdOutlineTimer />
+                        <MdOutlineTimer onClick={() => setIsTimerShown(true)} className={`${isTimerAdded && "text-primary"}`} />
                         <IoPricetagsOutline onClick={() => setIsCategoriesShown(true)} className={`${categoryChosen && "text-primary"} -rotate-90`} />
                         <HiOutlineFlag className={`${prioChosen && "text-primary"}`} onClick={() => setIsPrioShown(true)} />
                     </div>
@@ -90,6 +105,7 @@ export default function AddTodo() {
 
             </div>
 
+            {/* priority chooser */}
             <div className={`${isPrioShown && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
                 <div className={` ${!isPrioShown && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
                     <p className='text-center border-b w-full border-border pb-2'>Task Priority</p>
@@ -103,6 +119,7 @@ export default function AddTodo() {
                 </div>
             </div>
 
+            {/* category chooser */}
             <div className={`${isCategoriesShown && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
                 <div className={` ${!isCategoriesShown && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
                     <p className='text-center border-b w-full border-border pb-2'>Choose category</p>
@@ -122,6 +139,25 @@ export default function AddTodo() {
                     <div className='flex items-center justify-between mt-8 w-full'>
                         <Button data={{ text: "Cancel", color: 1, fn: () => { setIsCategoriesShown(false), setCategoryChosen(null) } }} />
                         <Button data={{ text: "Add category", fn: () => { setIsCategoriesShown(false), setCategoryChosen(true) } }} />
+                    </div>
+                </div>
+            </div>
+
+            {/* time chooser */}
+            <div className={`${isTimerShown && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
+                <div className={` ${!isTimerShown && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
+                    <p className='text-center border-b w-full border-border pb-2'>Choose time</p>
+                    <div className='flex items-center justify-center gap-3 pt-8'>
+                        <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'>
+                            <Slide start={1} stop={12} fn={data => taskTimerUpdater(data, "hour")} />
+                        </div>
+                        <span className='text-xl font-bold'>:</span>
+                        <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide start={0} stop={59} fn={data => taskTimerUpdater(data, "min")} /></div>
+                        <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide value={["AM", "PM"]} fn={data => taskTimerUpdater(data, "time")} /></div>
+                    </div>
+                    <div className='flex items-center justify-between mt-6 w-full'>
+                        <Button data={{ text: "Cancel", color: 1, fn: () => { setIsTimerShown(false), setIsTimerAdded(false) } }} />
+                        <Button data={{ text: "Save", fn: () => { setIsTimerShown(false), setIsTimerAdded(true) } }} />
                     </div>
                 </div>
             </div>
