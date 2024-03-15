@@ -1,7 +1,9 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import supabase from "../../client";
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getCookie, setCookie } from "../../utils";
+import { getCookie, getParsedTodos, setCookie } from "../../utils";
+import { useSelector } from "react-redux";
+import { useReducer } from "react";
 
 export const userLogin = createAsyncThunk(
     'user/userLogin',
@@ -58,6 +60,25 @@ export const newTodoUpdater = createAsyncThunk(
     }
 );
 
+export const deleteTask = createAsyncThunk(
+    "user/taskDelete",
+    async (taskId, { getState }) => {
+        try {
+            const { todos, id } = getState().user.userData
+
+            let allTasks = getParsedTodos(todos).filter(task => task.id != taskId)
+
+            const { data, error } = await supabase.from("users").update({ todos: allTasks }).eq("id", id).select()
+
+            if (error) { throw new Error(error.message) }
+
+            return data;
+        } catch (error) {
+            console.error("Async thunk error:", error);
+            throw error;
+        }
+    }
+);
 
 const userSlice = createSlice({
     name: "user",
@@ -74,7 +95,7 @@ const userSlice = createSlice({
         setToastData: (state, action) => { state.toastData = action.payload },
         setOverlayShow: (state, action) => { state.overlayShow = action.payload },
         setAddTodoShow: (state, action) => { state.addTodoShow = action.payload },
-        isLoginSetter: (state, action) => { state.isLogin = action.payload ? true : false, state.userData = action.payload }
+        isLoginSetter: (state, action) => { state.isLogin = action.payload ? true : false, state.userData = action.payload || getCookie() }
     },
     extraReducers: builder => {
         builder
@@ -87,7 +108,10 @@ const userSlice = createSlice({
 
                 state.userData = { ...state.userData, todos: action.payload };
                 setCookie(JSON.stringify(state.userData), 20);
+
             })
+            .addCase(deleteTask.fulfilled, (state, action) => { state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0]), 20); })
+            .addCase(deleteTask.rejected, (state, action) => { console.log(action.error); })
     }
 })
 

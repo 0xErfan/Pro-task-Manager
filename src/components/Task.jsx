@@ -2,11 +2,14 @@ import React from 'react'
 import { categoryList } from './AddTodo'
 import { FaRegCircle } from "react-icons/fa";
 import { HiOutlineFlag } from "react-icons/hi2";
+import { useNavigate } from 'react-router-dom';
 
-export default function Task({ description, title, category, priority }) {
+export default function Task({ description, title, category, priority, id }) {
+
+    const navigate = useNavigate()
 
     return (
-        <div className='w-full py-2 px-3 justify-between h-24 relative bg-primary-gray rounded-md' >
+        <div onClick={() => navigate(`/task-edit/${id}`)} className='w-full py-2 px-3 justify-between h-24 relative bg-primary-gray rounded-md' >
             <div className='flex flex-col items-center gap-3'>
                 <div className='flex items-center gap-3 w-full relative'>
                     <FaRegCircle className='size-5 absolute top-1/2 inset-0 h-full translate-y-1/2' />

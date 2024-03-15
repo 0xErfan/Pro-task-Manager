@@ -40,8 +40,8 @@ export default function AddTodo() {
     const chosenPriorities = allUserTodos.filter(todo => todo.priority)
 
     useEffect(() => { titleRef.current?.focus() }, [addTodoShow])
-    useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity")).key) }, [userData.todos])
-
+    useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity"))?.key) }, [userData.todos])
+    
     const addNewTodo = () => {
 
         const newTodo = {
@@ -98,7 +98,7 @@ export default function AddTodo() {
                     <div className='flex items-center gap-6 justify-between ch:size-6 ch:cursor-pointer'>
                         <MdOutlineTimer onClick={() => setIsTimerShown(true)} className={`${isTimerAdded && "text-primary"}`} />
                         <IoPricetagsOutline onClick={() => setIsCategoriesShown(true)} className={`${categoryChosen && "text-primary"} -rotate-90`} />
-                        <HiOutlineFlag className={`${prioChosen && "text-primary"}`} onClick={() => setIsPrioShown(true)} />
+                        <HiOutlineFlag className={`${prioChosen && "text-primary"}`} onClick={() => activePrio && setIsPrioShown(true)} />
                     </div>
                     <VscSend onClick={addNewTodo} className='text-primary size-7 cursor-pointer' />
                 </div>

@@ -19,10 +19,11 @@ export default function Home() {
     const [shownTodos, setShownTodos] = useState([])
     const [addTodoShown, setAddTodoShown] = useState(false)
 
-    useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
     useEffect(() => setShownTodos(allUserTodos), [userData.todos])
+    useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
 
-    let allUserTodos = getParsedTodos(userData.todos)
+    let allUserTodos
+    if (isLogin) allUserTodos = getParsedTodos(userData.todos)
 
     const taskFilterHandler = e => {
         let filteredTodos = [...allUserTodos]
@@ -67,18 +68,17 @@ export default function Home() {
                                                 [...shownTodos].sort((a, b) => (a.priority || 10000) - (b.priority || 10000)).map(data => <Task key={data.id} {...data} />)
                                             }</div>
                                     </>
+
                                     :
-                                    !shownTodos.length ? <div>No task found</div>
-                                        :
-                                        <div className='mt-40'>
-                                            <img className='block m-auto max-s-[277px] s-full' src="/Images/Checklist-rafiki 1.png" />
-                                            <h5 className=' text-[20px] font-bold text-center mt-2'>What do you want to do today?</h5>
-                                            <p className='text-center text-md text-milky mt-2'>Tap + to add your tasks</p>
-                                        </div>
+                                    <div className='mt-40'>
+                                        <img className='block m-auto max-s-[277px] s-full' src="/Images/Checklist-rafiki 1.png" />
+                                        <h5 className=' text-[20px] font-bold text-center mt-2'>What do you want to do today?</h5>
+                                        <p className='text-center text-md text-milky mt-2'>Tap + to add your tasks</p>
+                                    </div>
                             }
+                            <Nav />
                             <AddTodo visible={addTodoShown} />
                         </section>
-                        <Nav />
                     </>
             }
             <OverlayFilter />
