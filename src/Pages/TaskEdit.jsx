@@ -69,7 +69,7 @@ export default function TaskEdit() {
                     <div className='flex gap-2 items-center ch:size-5 bg-primary-gray p-2 rounded-md' > {priority && <HiOutlineFlag />} {priority || "Not set"} </div>
                 </div>
 
-                <div onClick={() => { dispatch(deleteTask(taskId.id)) , navigate("/")}} className='flex items-center justify-between text-red-500'>
+                <div onClick={() => { dispatch(deleteTask(taskId.id)) , navigate("/")}} className=' cursor-pointer flex items-center justify-between text-red-500'>
                     <div className='flex items-center gap-[6px]'>
                         <MdDeleteOutline className='size-6' />
                         <p>Delete Task</p>
