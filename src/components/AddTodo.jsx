@@ -5,7 +5,7 @@ import { IoPricetagsOutline } from "react-icons/io5";
 import { HiOutlineFlag } from "react-icons/hi2";
 import { TiTickOutline } from "react-icons/ti";
 import Button from "./Button"
-import { newTodoUpdater, setOverlayShow, setAddTodoShow } from '../Redux/Futures/userSlice';
+import { setOverlayShow, setAddTodoShow, taskUpdater } from '../Redux/Futures/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getParsedTodos } from '../utils';
 import Slide from './Slide';
@@ -41,7 +41,7 @@ export default function AddTodo() {
 
     useEffect(() => { titleRef.current?.focus() }, [addTodoShow])
     useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity"))?.key) }, [userData.todos])
-    
+
     const addNewTodo = () => {
 
         const newTodo = {
@@ -50,10 +50,11 @@ export default function AddTodo() {
             description,
             priority: prioChosen ? activePrio : null,
             category: categoryChosen ? category : null,
-            time: isTimerAdded ? taskTimer : null
+            time: isTimerAdded ? taskTimer : null,
+            isComplete: false
         }
 
-        dispatch(newTodoUpdater(newTodo))
+        dispatch(taskUpdater({ newTodo, action: "add" }))
 
         setTitle("")
         setCategory("Home")

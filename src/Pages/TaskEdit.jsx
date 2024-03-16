@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getCookie, getParsedTodos } from '../utils';
@@ -9,9 +9,11 @@ import { FaRegCircle } from "react-icons/fa";
 import { IoPricetagsOutline } from 'react-icons/io5';
 import { HiOutlineFlag } from 'react-icons/hi2';
 import { categoryList } from '../components/AddTodo';
-import { deleteTask } from '../Redux/Futures/userSlice';
+import { taskUpdater } from '../Redux/Futures/userSlice';
 
 export default function TaskEdit() {
+
+    const [isEditing, setIsEditing] = useState(false)
 
     const taskId = useParams()
     const dispatch = useDispatch()
@@ -19,6 +21,7 @@ export default function TaskEdit() {
     let userTasks = useSelector(state => state.user.userData.todos)
     !userTasks.length && (userTasks = getCookie().todos)
     userTasks = getParsedTodos(userTasks)
+
 
     const { title, description, time = null, category, priority } = userTasks.find(task => task.id == taskId.id)
 
@@ -69,7 +72,7 @@ export default function TaskEdit() {
                     <div className='flex gap-2 items-center ch:size-5 bg-primary-gray p-2 rounded-md' > {priority && <HiOutlineFlag />} {priority || "Not set"} </div>
                 </div>
 
-                <div onClick={() => { dispatch(deleteTask(taskId.id)) , navigate("/")}} className=' cursor-pointer flex items-center justify-between text-red-500'>
+                <div onClick={() => { dispatch(taskUpdater({ action: "delete", taskId: taskId.id })), navigate("/") }} className=' cursor-pointer flex items-center justify-between text-red-500'>
                     <div className='flex items-center gap-[6px]'>
                         <MdDeleteOutline className='size-6' />
                         <p>Delete Task</p>
