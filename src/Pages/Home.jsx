@@ -76,12 +76,11 @@ export default function Home() {
                                         <p className='text-center text-md text-milky mt-2'>Tap + to add your tasks</p>
                                     </div>
                             }
-                            <Nav />
                             <AddTodo visible={addTodoShown} />
                         </section>
                     </>
             }
-            <OverlayFilter />
+            {/* <Nav /> */}
         </main>
     )
 }

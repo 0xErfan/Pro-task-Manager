@@ -3,12 +3,14 @@ import { useRoutes } from "react-router-dom"
 import appRoutes from "./routes"
 import useOnline from "./Hooks/useOnline"
 import { useDispatch, useSelector } from "react-redux"
-import { isLoginSetter, isOnlineChanger } from "./Redux/Futures/userSlice"
+import { isOnlineChanger } from "./Redux/Futures/userSlice"
 import { useEffect } from "react"
 import Toast from "./components/Toast"
-import { getCookie } from "./utils"
+import OverlayFilter from "./components/OverlayFilter"
+import Nav from "./components/Nav"
 
 function App() {
+    
     const routes = useRoutes(appRoutes)
     const isOnline = useOnline()
     const dispatch = useDispatch()
@@ -19,9 +21,10 @@ function App() {
 
     return (
         <>
-            <Toast showToast={showToast} text={text} status={status} loader={loader} />
             {routes}
-            {/* <Nav /> */}
+            <Toast showToast={showToast} text={text} status={status} loader={loader} />
+            <OverlayFilter />
+            <Nav />
         </>
     )
 }

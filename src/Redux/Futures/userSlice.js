@@ -1,9 +1,7 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import supabase from "../../client";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getCookie, getParsedTodos, setCookie } from "../../utils";
-import { useSelector } from "react-redux";
-import { useReducer } from "react";
 
 export const userLogin = createAsyncThunk(
     'user/userLogin',
@@ -34,7 +32,7 @@ export const taskUpdater = createAsyncThunk(
     async (infos, { getState }) => {
         try {
 
-            const { taskId, action, newTodo } = infos
+            const { taskId, action, newTodo, data: updatedTaskData } = infos
             const { todos, id } = getState().user.userData
 
             let newUpdatedTasks
@@ -44,7 +42,15 @@ export const taskUpdater = createAsyncThunk(
             } else if (action == "add") {
                 newUpdatedTasks = [...getState().user.userData.todos, newTodo];
             } else {
-                return
+                newUpdatedTasks = getParsedTodos(getCookie().todos)
+
+                newUpdatedTasks.some(task => {
+                    if (task.id == taskId) {
+                        task.description = updatedTaskData.desc
+                        task.title = updatedTaskData.taskTitle
+                        return true
+                    }
+                })
             }
 
             const { data, error } = await supabase.from("users").update({ todos: newUpdatedTasks }).eq("id", id).select()
@@ -52,7 +58,7 @@ export const taskUpdater = createAsyncThunk(
             if (error) { throw new Error(error.message) }
 
             console.log(data);
-            return data;
+            return data
 
         } catch (error) {
             console.error("Async thunk error:", error);
@@ -85,14 +91,6 @@ const userSlice = createSlice({
                 location.href = "/"
             })
             .addCase(userLogin.rejected, state => { state.toastData = { text: "Incorrect usrename or password!", status: 0, showToast: 1 } })
-            // .addCase(newTodoUpdater.fulfilled, (state, action) => {
-            //     state.userData = { ...state.userData, todos: action.payload };
-            //     setCookie(JSON.stringify(state.userData), 20);
-
-            // })
-            // .addCase(deleteTask.fulfilled, (state, action) => { state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0]), 20); })
-            // .addCase(deleteTask.rejected, (state, action) => { console.log(action.error); })
-
             .addCase(taskUpdater.fulfilled, (state, action) => { state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
             .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error); })
     }

@@ -18,7 +18,7 @@ export default function Task({ description, title, category, priority, id, time,
                         <div className='text-milky-dark absolute top-[100%] w-[40%] translate-y-1/2'>
                             {
                                 time ?
-                                    <div>{time.time == "AM" ? "Today" : "Tomorrow"} At {time.hour + ":" + time.min}</div>
+                                    <div className=' line-clamp-1 '>{time.time == "AM" ? "Today" : "Tomorrow"} At {time.hour + ":" + time.min}</div>
                                     :
                                     <p className='text-ellipsis line-clamp-1 '>{description}</p>
                             }
