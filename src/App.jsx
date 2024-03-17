@@ -10,12 +10,13 @@ import OverlayFilter from "./components/OverlayFilter"
 import Nav from "./components/Nav"
 
 function App() {
-    
+
     const routes = useRoutes(appRoutes)
     const isOnline = useOnline()
     const dispatch = useDispatch()
 
-    const { showToast, text, status, loader } = useSelector(store => store.user.toastData)
+    const { userData, isLogin } = useSelector(store => store.user)
+    const { showToast, text, status, loader } = userData
 
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 
@@ -24,7 +25,7 @@ function App() {
             {routes}
             <Toast showToast={showToast} text={text} status={status} loader={loader} />
             <OverlayFilter />
-            <Nav />
+            {isLogin && <Nav />}
         </>
     )
 }

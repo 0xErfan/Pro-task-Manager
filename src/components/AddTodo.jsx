@@ -4,11 +4,11 @@ import { VscSend } from "react-icons/vsc";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { HiOutlineFlag } from "react-icons/hi2";
 import { TiTickOutline } from "react-icons/ti";
-import Button from "./Button"
 import { setOverlayShow, setAddTodoShow, taskUpdater } from '../Redux/Futures/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getParsedTodos } from '../utils';
 import Slide from './Slide';
+import DataSetter from './DataSetter';
 
 export default function AddTodo() {
 
@@ -44,13 +44,18 @@ export default function AddTodo() {
 
     const addNewTodo = () => {
 
+        if (!title.trim().length) {
+            titleRef.current?.focus()
+            return
+        }
+
         const newTodo = {
             id: Date.now(),
             title,
             description,
             priority: prioChosen ? activePrio : null,
             category: categoryChosen ? category : null,
-            time: isTimerAdded ? taskTimer : null,
+            time: isTimerAdded ? { ...taskTimer, hour: taskTimer.hour + 1, date: new Date().getDate() } : null,
             isComplete: false
         }
 
@@ -106,24 +111,23 @@ export default function AddTodo() {
 
             </div>
 
-            {/* priority chooser */}
-            <div className={`${isPrioShown && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
-                <div className={` ${!isPrioShown && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
-                    <p className='text-center border-b w-full border-border pb-2'>Task Priority</p>
+            {/* priority getter */}
+            <DataSetter
+                topic="Task priority"
+                children={
                     <div className='grid grid-cols-4 gap-4 mt-4 ch:flex ch:flex-col-reverse ch:gap-2 ch:items-center ch:justify-center ch:rounded-md ch:size-16 ch:ch:size-5'>
                         {allPriorities}
                     </div>
-                    <div className='flex items-center justify-between mt-6 w-full'>
-                        <Button data={{ text: "Cancel", color: 1, fn: () => { setIsPrioShown(false), setPrioChosen(false) } }} />
-                        <Button data={{ text: "Save", fn: () => { setIsPrioShown(false), setPrioChosen(true) } }} />
-                    </div>
-                </div>
-            </div>
+                }
+                cancelBtnFn={() => { setIsPrioShown(false), setPrioChosen(false) }}
+                saveBtnFn={() => { setIsPrioShown(false), setPrioChosen(true) }}
+                show={isPrioShown}
+            />
 
-            {/* category chooser */}
-            <div className={`${isCategoriesShown && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
-                <div className={` ${!isCategoriesShown && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
-                    <p className='text-center border-b w-full border-border pb-2'>Choose category</p>
+            {/* category getter */}
+            <DataSetter
+                topic="Choose category"
+                children={
                     <div className='grid grid-cols-3 gap-6 mt-4 ch:size-16 bg-primary-gray'>
                         {
                             categoryList.map(data => <div
@@ -137,17 +141,16 @@ export default function AddTodo() {
                             </div>)
                         }
                     </div>
-                    <div className='flex items-center justify-between mt-8 w-full'>
-                        <Button data={{ text: "Cancel", color: 1, fn: () => { setIsCategoriesShown(false), setCategoryChosen(null) } }} />
-                        <Button data={{ text: "Add category", fn: () => { setIsCategoriesShown(false), setCategoryChosen(true) } }} />
-                    </div>
-                </div>
-            </div>
+                }
+                cancelBtnFn={() => { setIsCategoriesShown(false), setCategoryChosen(null) }}
+                saveBtnFn={() => { setIsCategoriesShown(false), setCategoryChosen(true) }}
+                show={isCategoriesShown}
+            />
 
-            {/* time chooser */}
-            <div className={`${isTimerShown && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
-                <div className={` ${!isTimerShown && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
-                    <p className='text-center border-b w-full border-border pb-2'>Choose time</p>
+            {/* time getter */}
+            <DataSetter
+                topic="Choose time"
+                children={
                     <div className='flex items-center justify-center gap-3 pt-8'>
                         <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'>
                             <Slide start={1} stop={12} fn={data => taskTimerUpdater(data, "hour")} />
@@ -156,12 +159,11 @@ export default function AddTodo() {
                         <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide start={0} stop={59} fn={data => taskTimerUpdater(data, "min")} /></div>
                         <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide value={["AM", "PM"]} fn={data => taskTimerUpdater(data, "time")} /></div>
                     </div>
-                    <div className='flex items-center justify-between mt-6 w-full'>
-                        <Button data={{ text: "Cancel", color: 1, fn: () => { setIsTimerShown(false), setIsTimerAdded(false) } }} />
-                        <Button data={{ text: "Save", fn: () => { setIsTimerShown(false), setIsTimerAdded(true) } }} />
-                    </div>
-                </div>
-            </div>
+                }
+                cancelBtnFn={() => { setIsTimerShown(false), setIsTimerAdded(false) }}
+                saveBtnFn={() => { setIsTimerShown(false), setIsTimerAdded(true) }}
+                show={isTimerShown}
+            />
         </>
     )
 }

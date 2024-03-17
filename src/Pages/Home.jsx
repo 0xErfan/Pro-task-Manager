@@ -6,9 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { CgSortAz } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom'
 import { IoSearch } from "react-icons/io5";
-import Nav from '../components/Nav'
 import AddTodo from '../components/AddTodo'
-import OverlayFilter from '../components/OverlayFilter'
 import Task from '../components/Task'
 
 export default function Home() {

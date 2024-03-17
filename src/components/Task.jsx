@@ -3,11 +3,13 @@ import { categoryList } from './AddTodo'
 import { FaRegCircle } from "react-icons/fa";
 import { HiOutlineFlag } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
+import { checkTaskStatus, padStarter } from '../utils';
 
 export default function Task({ description, title, category, priority, id, time, isComplete }) {
 
     const navigate = useNavigate()
-
+    const taskStats = checkTaskStatus(time)
+    console.log(taskStats);
     return (
         <div className={`w-full py-2 px-3 justify-between h-24 relative bg-primary-gray rounded-md ${isComplete && "opacity-30"}`} >
             <FaRegCircle className='size-6 absolute left-3 -top-1/2 inset-0 h-full translate-y-1/2' />
@@ -18,7 +20,11 @@ export default function Task({ description, title, category, priority, id, time,
                         <div className='text-milky-dark absolute top-[100%] w-[40%] translate-y-1/2'>
                             {
                                 time ?
-                                    <div className=' line-clamp-1 '>{time.time == "AM" ? "Today" : "Tomorrow"} At {time.hour + ":" + time.min}</div>
+                                    <div className=' line-clamp-1 '>
+                                        {
+                                            taskStats != "Passed" ? taskStats + " At " + padStarter(time.hour) + ":" + padStarter(time.min) : "Passed"
+                                        }
+                                    </div>
                                     :
                                     <p className='text-ellipsis line-clamp-1 '>{description}</p>
                             }

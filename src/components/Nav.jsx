@@ -4,7 +4,7 @@ import { MdAccessTime } from "react-icons/md";
 import { LuUser } from "react-icons/lu";
 import { SlCalender } from "react-icons/sl";
 import { FaPlus } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { setAddTodoShow } from '../Redux/Futures/userSlice';
 import { useDispatch } from 'react-redux';
 
@@ -12,6 +12,7 @@ export default function Nav() {
 
     const [activeNav, steActiveNav] = useState(location.pathname)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     useEffect(() => steActiveNav(location.hash), [location.hash])
 
     return (
@@ -49,7 +50,7 @@ export default function Nav() {
                         </div>
                     </div>
                 </div>
-                <div onClick={() => dispatch(setAddTodoShow(true))} className='addTodo bg-primary size-[75px] rounded-full flex items-center justify-center cursor-pointer'><FaPlus className='size-6' /></div>
+                <div onClick={() => {dispatch(setAddTodoShow(true)), navigate("/")}} className='addTodo bg-primary size-[75px] rounded-full flex items-center justify-center cursor-pointer'><FaPlus className='size-6' /></div>
             </nav>
         </>
     )

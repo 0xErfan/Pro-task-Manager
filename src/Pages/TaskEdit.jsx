@@ -11,10 +11,14 @@ import { HiOutlineFlag } from 'react-icons/hi2';
 import { categoryList } from '../components/AddTodo';
 import { setOverlayShow, taskUpdater } from '../Redux/Futures/userSlice';
 import Button from '../components/Button';
+import DataSetter from '../components/DataSetter';
 
 export default function TaskEdit() {
 
     const [isEditing, setIsEditing] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
+    const [categoryShow, setCategoryShow] = useState(false)
+
     const [taskTitle, setTaskTitle] = useState("")
     const [desc, setDesc] = useState("")
 
@@ -70,7 +74,7 @@ export default function TaskEdit() {
                     </div>
                 </div>
 
-                <div className='flex items-center justify-between'>
+                <div onClick={() => setCategoryShow(true)} className='flex items-center justify-between'>
                     <div className='flex items-center gap-[6px]'>
                         <IoPricetagsOutline className='size-6' />
                         <p>Task Category :</p>
@@ -86,7 +90,7 @@ export default function TaskEdit() {
                     <div className='flex gap-2 items-center ch:size-5 bg-primary-gray p-2 rounded-md' > {priority && <HiOutlineFlag />} {priority || "Not set"} </div>
                 </div>
 
-                <div onClick={() => { dispatch(taskUpdater({ action: "delete", taskId: taskId.id })), navigate("/") }} className=' cursor-pointer flex items-center justify-between text-red-500'>
+                <div onClick={() => setIsDeleting(true)} className='cursor-pointer flex items-center justify-between text-red-500'>
                     <div className='flex items-center gap-[6px]'>
                         <MdDeleteOutline className='size-6' />
                         <p>Delete Task</p>
@@ -109,7 +113,17 @@ export default function TaskEdit() {
                     </div>
                 </div>
 
+                {/* Task deleter */}
+                <DataSetter
+                    topic="Delete task"
+                    children={<div className='flex flex-col w-full items-center gap-3 pt-8'><h3>Are You sure you want to delete this task?</h3></div>}
+                    cancelBtnFn={() => { setIsDeleting(false) }}
+                    saveBtnFn={() => { dispatch(taskUpdater({ action: "delete", taskId: taskId.id })), setIsDeleting(false), navigate("/") }}
+                    saveBtnText="Delete"
+                    show={isDeleting}
+                />
+
             </div>
-        </section>
+        </section >
     );
 }

@@ -38,10 +38,27 @@ const padStarter = val => {
     return newVal
 }
 
+function checkTaskStatus(time) {
+    if (!time) return;
+    !time.time && (time.time = "AM")
+
+    const currentDateTime = new Date();
+    const userHour = time.hour + (time.time === "PM" ? 12 : 0); // Convert to 24-hour format if PM
+    const userMin = time.min;
+    const todoDateTime = new Date(currentDateTime);
+    
+    todoDateTime.setHours(userHour, userMin, 0, 0);
+    
+    if (todoDateTime > currentDateTime) { return "Today" }
+    if (todoDateTime.getHours() + 12 < currentDateTime.getHours()) { return "Tomorrow" }
+    if (todoDateTime < currentDateTime) { return "Passed" }
+}
+
 export {
     showToast,
     setCookie,
     getCookie,
     getParsedTodos,
-    padStarter
+    padStarter,
+    checkTaskStatus
 }
