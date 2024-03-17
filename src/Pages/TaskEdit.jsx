@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getCookie, getParsedTodos } from '../utils';
+import { checkTaskStatus, getCookie, getParsedTodos, padStarter } from '../utils';
 import { IoMdClose } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline, MdEMobiledata, MdOutlineTimer } from "react-icons/md";
@@ -17,7 +17,6 @@ export default function TaskEdit() {
 
     const [isEditing, setIsEditing] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
-    const [categoryShow, setCategoryShow] = useState(false)
 
     const [taskTitle, setTaskTitle] = useState("")
     const [desc, setDesc] = useState("")
@@ -25,9 +24,13 @@ export default function TaskEdit() {
     const taskId = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
     let userTasks = useSelector(state => state.user.userData.todos)
     !userTasks.length && (userTasks = getCookie().todos)
     userTasks = getParsedTodos(userTasks)
+
+    const { title, description, time = null, category, priority } = userTasks.find(task => task.id == taskId.id)
+    const taskStats = checkTaskStatus(time)
 
     const taskUpdate = () => {
         setIsEditing(false)
@@ -41,7 +44,6 @@ export default function TaskEdit() {
         setTaskTitle(title)
     }
 
-    const { title, description, time = null, category, priority } = userTasks.find(task => task.id == taskId.id)
 
     return (
         <section className='container'>
@@ -68,7 +70,7 @@ export default function TaskEdit() {
                     <div className=' bg-primary-gray p-2 rounded-md' >
                         {
                             time ?
-                                <div>{time.time == "AM" ? "Today" : "Tomorrow"} At {time.hour + ":" + time.min}</div>
+                                taskStats != "Passed" ? taskStats + " At " + padStarter(time.hour) + ":" + padStarter(time.min) : "Passed"
                                 : <div>Not set</div>
                         }
                     </div>
@@ -98,7 +100,7 @@ export default function TaskEdit() {
                 </div>
 
                 <div className={`${isEditing && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
-                    <div className={` ${!isEditing && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
+                    <div className={` ${!isEditing && "hidden"} centered flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
                         <p className='text-center border-b w-full border-border pb-2'>Edit task</p>
                         <div className='flex flex-col w-full items-center gap-3 pt-8'>
 

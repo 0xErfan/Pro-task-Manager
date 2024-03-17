@@ -29,6 +29,11 @@ export default function Home() {
         setShownTodos(filteredTodos)
     }
 
+    const activeTodos = [...shownTodos]
+        .sort((a, b) => (a.priority || 10000) - (b.priority || 10000))
+        .filter(task => !task.isComplete)
+        .map(data => <Task key={data.id} {...data} />)
+
     return (
         <main>
             {
@@ -63,8 +68,23 @@ export default function Home() {
                                         </select>
                                         <div className='space-y-4 mt-4 pb-[120px]'>
                                             {// 1000 because if the todo did't have priority value, it goes to the bottom in sorting
-                                                [...shownTodos].sort((a, b) => (a.priority || 10000) - (b.priority || 10000)).map(data => <Task key={data.id} {...data} />)
-                                            }</div>
+                                                [...shownTodos]
+                                                    .sort((a, b) => (a.priority || 10000) - (b.priority || 10000))
+                                                    .filter(task => !task.isComplete)
+                                                    .map(data => <Task key={data.id} {...data} />)
+                                            }
+                                        </div>
+
+                                        {
+                                            [...shownTodos].filter(task => task.isComplete).length ? (
+                                                <div className='space-y-4'>
+                                                    <p className=' p-2 outline-none bg-primary-gray mt-4 w-28 h-10 rounded-md'>Completed</p>
+                                                    {[...shownTodos].filter(task => task.isComplete).map(data => <Task key={data.id} {...data} />)}
+                                                </div>
+                                            ) : null
+
+                                        }
+
                                     </>
 
                                     :
@@ -74,7 +94,7 @@ export default function Home() {
                                         <p className='text-center text-md text-milky mt-2'>Tap + to add your tasks</p>
                                     </div>
                             }
-                            <AddTodo visible={addTodoShown} />
+                            <AddTodo />
                         </section>
                     </>
             }

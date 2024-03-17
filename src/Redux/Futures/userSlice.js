@@ -30,6 +30,7 @@ export const userLogin = createAsyncThunk(
 export const taskUpdater = createAsyncThunk(
     "user/todosUpdaterr",
     async (infos, { getState }) => {
+
         try {
 
             const { taskId, action, newTodo, data: updatedTaskData } = infos
@@ -46,8 +47,10 @@ export const taskUpdater = createAsyncThunk(
 
                 newUpdatedTasks.some(task => {
                     if (task.id == taskId) {
-                        task.description = updatedTaskData.desc
-                        task.title = updatedTaskData.taskTitle
+                        if (updatedTaskData?.title) {
+                            task.description = updatedTaskData.desc
+                            task.title = updatedTaskData.taskTitle
+                        } else task.isComplete = !task.isComplete
                         return true
                     }
                 })
@@ -72,6 +75,7 @@ const userSlice = createSlice({
     initialState: {
         isOnline: true,
         isLogin: false,
+        isLoading: false,
         overlayShow: false,
         addTodoShow: false,
         userData: { todos: [] },
@@ -91,8 +95,10 @@ const userSlice = createSlice({
                 location.href = "/"
             })
             .addCase(userLogin.rejected, state => { state.toastData = { text: "Incorrect usrename or password!", status: 0, showToast: 1 } })
-            .addCase(taskUpdater.fulfilled, (state, action) => { state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
-            .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error); })
+            
+            .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
+            .addCase(taskUpdater.pending, state => { state.isLoading = true })
+            .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
     }
 })
 

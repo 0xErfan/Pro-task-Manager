@@ -1,18 +1,22 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { categoryList } from './AddTodo'
 import { FaRegCircle } from "react-icons/fa";
 import { HiOutlineFlag } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { checkTaskStatus, padStarter } from '../utils';
+import { taskUpdater } from '../Redux/Futures/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Task({ description, title, category, priority, id, time, isComplete }) {
 
     const navigate = useNavigate()
     const taskStats = checkTaskStatus(time)
-    console.log(taskStats);
+    const dispatch = useDispatch()
+    const { isLoading } = useSelector(state => state.user)
+
     return (
-        <div className={`w-full py-2 px-3 justify-between h-24 relative bg-primary-gray rounded-md ${isComplete && "opacity-30"}`} >
-            <FaRegCircle className='size-6 absolute left-3 -top-1/2 inset-0 h-full translate-y-1/2' />
+        <div className={`w-full p-2 justify-between h-24 relative bg-primary-gray rounded-md ${isComplete && "opacity-30"}`} >
+            <FaRegCircle onClick={() => !isLoading && dispatch(taskUpdater({ taskId: id, action: "update" }))} className={`size-6 ${isComplete && "bg-primary"} rounded-full centered left-6`} />
             <div onClick={() => navigate(`/task-edit/${id}`)} className='flex flex-col items-center gap-3'>
                 <div className='flex items-center gap-3 w-full relative'>
                     <div className='ml-auto w-[87%] relative'>
