@@ -5,14 +5,16 @@ import { FaChevronRight, FaGithub, FaInstagram, FaTelegramPlane } from "react-ic
 import { LuUser2 } from "react-icons/lu";
 import { LuKeyRound } from "react-icons/lu";
 import { TiCameraOutline } from "react-icons/ti";
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { getCookie, getParsedTodos, showToast } from '../utils';
 import DataSetter from '../components/DataSetter';
 import { setToastData, userDataUpdater } from '../Redux/Futures/userSlice';
 
 export default function Profile() {
 
-    const { userImg, userData, isLoading } = useSelector(state => state.user)
+    const { userImg, userData, isLoading, isLogin } = useSelector(state => state.user)
+
+    if (!isLogin) return <Navigate to="/" />
 
     const [changeAcoundNameShow, setChangeAcoundNameShow] = useState("")
     const [changeAcoundPassword, setChangeAcoundPassword] = useState("")
@@ -20,15 +22,48 @@ export default function Profile() {
 
     const [isPasswordCorredt, setIsPasswordCorrect] = useState(false)
     const [currentName, setCurrentName] = useState("")
+
+
+    const [newPass, setNewPass] = useState("")
+    const [confirmNewPass, setConfirmNewPass] = useState("")
+
+
+
+
     const tasks = getParsedTodos(getCookie().todos)
     const dispatch = useDispatch()
     const completedTasks = tasks.filter(task => task.isComplete).length
 
     const newPasswordUpdater = () => {
-        showToast(dispatch, "Incorrect password !", 0)
-        // changeAcoundPassword == userData.password ? setIsPasswordCorrect(true) : showToast(dispatch, "Incorrect password !", 0)
-        // dispatch(userDataUpdater({ action: "userDataUpdate", newName: currentName }))
-        // setChangeAcoundPassword(false)
+
+        changeAcoundPassword == userData.password ? setIsPasswordCorrect(true) : showToast(dispatch, "Incorrect password !", 0)
+
+        if (changeAcoundPassword == userData.password) {
+
+            if (!newPass.trim().length || !confirmNewPass.trim().length) return
+
+            if (newPass != confirmNewPass) {
+                showToast(dispatch, "Password and Confirm password are different !", 0, 3500)
+            } else if (newPass.trim().length < 8) {
+                showToast(dispatch, "Password can be at least 8 characters !", 0, 3500)
+            } else {
+                dispatch(userDataUpdater({ action: "changePass", newPass }))
+                showToast(dispatch, "Password changed successfully (:", 1, 2000)
+                setChangeAcoundPassword(false)
+                setIsPasswordCorrect(false)
+                setNewPass("")
+                setConfirmNewPass("")
+            }
+        }
+    }
+
+    const newNameUpdater = () => {
+        if (currentName.trim().length < 4) {
+            showToast(dispatch, "Name at least should contain 4 letters ! ", 0, 3000)
+        } else {
+            dispatch(userDataUpdater({ action: "changeName", newName: currentName }))
+            setChangeAcoundNameShow(false)
+        }
     }
 
     return (
@@ -109,22 +144,22 @@ export default function Profile() {
                 topic="Change name"
                 children={<div className='flex flex-col w-full items-center gap-3 pt-8'><input onChange={e => setCurrentName(e.target.value)} value={currentName} className=' w-full py-3 rounded-sm bg-transparent border border-border px-2 ' placeholder='Enter your new name: '></input></div>}
                 cancelBtnFn={() => { setChangeAcoundNameShow(false) }}
-                saveBtnFn={() => { dispatch(userDataUpdater({ action: "userDataUpdate", newName: currentName })), setChangeAcoundNameShow(false) }}
+                saveBtnFn={newNameUpdater}
                 saveBtnText="Save"
                 show={changeAcoundNameShow}
             />
 
 
             <DataSetter
-                topic="Change name"
+                topic="Change password"
                 children={<div className='flex flex-col w-full items-center gap-3 pt-8'>
                     {
                         !isPasswordCorredt && <input onChange={e => setChangeAcoundPassword(e.target.value)} className=' w-full py-3 rounded-sm bg-transparent border border-border px-2 ' placeholder='Enter your current password : '></input>
                     }
                     {
                         isPasswordCorredt && <div className='space-y-3'>
-                            <input className=' w-full py-3 rounded-sm bg-transparent border border-border px-2' type='password' placeholder='Enter your new password : '></input>
-                            <input className=' w-full py-3 rounded-sm bg-transparent border border-border px-2' type='password' placeholder='Confirm your new password : '></input>
+                            <input onChange={e => setNewPass(e.target.value)} className=' w-full py-3 rounded-sm bg-transparent border border-border px-2' type='password' placeholder='Enter your new password : '></input>
+                            <input onChange={e => setConfirmNewPass(e.target.value)} className=' w-full py-3 rounded-sm bg-transparent border border-border px-2' type='password' placeholder='Confirm your new password : '></input>
                         </div>
                     }
                 </div>}

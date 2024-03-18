@@ -15,8 +15,8 @@ function App() {
     const isOnline = useOnline()
     const dispatch = useDispatch()
 
-    const { userData, isLogin } = useSelector(store => store.user)
-    const { showToast, text, status, loader } = userData
+    const { userData, isLogin, toastData } = useSelector(store => store.user)
+    const { showToast, text, status, loader } = toastData
 
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 

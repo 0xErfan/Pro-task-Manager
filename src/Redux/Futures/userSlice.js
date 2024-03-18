@@ -81,12 +81,27 @@ export const userDataUpdater = createAsyncThunk(
     async (infos, { getState }) => {
 
         const { id } = getState().user.userData
+        const { action, newName, newPass } = infos
+
+        let userDataProp, updatedData
 
         try {
 
-            const { newName } = infos
+            switch (action) {
+                case "changeName":
+                    userDataProp = "name"
+                    updatedData = newName
+                    break;
+                case "changePass":
+                    userDataProp = "password"
+                    updatedData = newPass
+                    break;
+                default:
+                    console.error("Envalid action");
+                    break;
+            }
 
-            const { data, error } = await supabase.from("users").update({ name: newName }).eq("id", id).select()
+            const { data, error } = await supabase.from("users").update({ [userDataProp]: updatedData }).eq("id", id).select()
 
             if (error) { throw new Error(error.message) }
 
@@ -130,7 +145,7 @@ const userSlice = createSlice({
             .addCase(taskUpdater.pending, state => { state.isLoading = true })
             .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
 
-            .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.name = action.payload[0].name, setCookie(JSON.stringify(action.payload[0])) })
+            .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(action.payload[0])) })
             .addCase(userDataUpdater.pending, state => { state.isLoading = true })
             .addCase(userDataUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
     }
