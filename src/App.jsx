@@ -25,7 +25,7 @@ function App() {
             {routes}
             <Toast showToast={showToast} text={text} status={status} loader={loader} />
             <OverlayFilter />
-            {isLogin && <Nav />}
+            {userData?.id && <Nav />}
         </>
     )
 }

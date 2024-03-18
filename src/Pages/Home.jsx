@@ -29,7 +29,7 @@ export default function Home() {
         setShownTodos(filteredTodos)
     }
 
-    const activeTodos = [...shownTodos]
+    const activeTodos = isLogin && [...shownTodos]
         .sort((a, b) => (a.priority || 10000) - (b.priority || 10000))
         .filter(task => !task.isComplete)
         .map(data => <Task key={data.id} {...data} />)
@@ -67,12 +67,7 @@ export default function Home() {
                                             <option value="tomorrow">Tomorrow</option>
                                         </select>
                                         <div className='space-y-4 mt-4 pb-[120px]'>
-                                            {// 1000 because if the todo did't have priority value, it goes to the bottom in sorting
-                                                [...shownTodos]
-                                                    .sort((a, b) => (a.priority || 10000) - (b.priority || 10000))
-                                                    .filter(task => !task.isComplete)
-                                                    .map(data => <Task key={data.id} {...data} />)
-                                            }
+                                            {activeTodos}
                                         </div>
 
                                         {

@@ -50,7 +50,7 @@ function checkTaskStatus(time) {
     todoDateTime.setHours(userHour, userMin, 0, 0);
     
     if (todoDateTime > currentDateTime) { return "Today" }
-    if (todoDateTime.getHours() + 12 < currentDateTime.getHours()) { return "Tomorrow" }
+    if (todoDateTime * 12 * 60 * 60 * 1000 > currentDateTime) { return "Tomorrow" }
     if (todoDateTime < currentDateTime) { return "Passed" }
 }
 

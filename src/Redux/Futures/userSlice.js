@@ -3,6 +3,8 @@ import supabase from "../../client";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getCookie, getParsedTodos, setCookie } from "../../utils";
 
+
+
 export const userLogin = createAsyncThunk(
     'user/userLogin',
     async ({ userName, password, showToast, setCookie, reseter }) => {
@@ -43,7 +45,7 @@ export const taskUpdater = createAsyncThunk(
             } else if (action == "add") {
                 newUpdatedTasks = [...getState().user.userData.todos, newTodo];
             } else {
-                newUpdatedTasks = getParsedTodos(getCookie().todos)
+                newUpdatedTasks = getParsedTodos(todos)
 
                 newUpdatedTasks.some(task => {
                     if (task.id == taskId) {
@@ -69,6 +71,29 @@ export const taskUpdater = createAsyncThunk(
         }
     }
 )
+export const userDataUpdater = createAsyncThunk(
+    "user/userDataUpdater",
+    async (infos, { getState }) => {
+
+        const { id } = getState().user.userData
+
+        try {
+
+            const { newName } = infos
+
+            const { data, error } = await supabase.from("users").update({ name: newName }).eq("id", id).select()
+
+            if (error) { throw new Error(error.message) }
+
+            console.log(data);
+            return data
+
+        } catch (error) {
+            console.error("Async thunk error:", error);
+            throw error;
+        }
+    }
+)
 
 const userSlice = createSlice({
     name: "user",
@@ -78,7 +103,7 @@ const userSlice = createSlice({
         isLoading: false,
         overlayShow: false,
         addTodoShow: false,
-        userData: { todos: [] },
+        userData: document.cookie.includes("userData") && JSON.parse(document.cookie.replace("userData=", "")),
         toastData: { showToast: false, text: null, status: 0, loader: 0 },
     },
     reducers: {
@@ -95,10 +120,14 @@ const userSlice = createSlice({
                 location.href = "/"
             })
             .addCase(userLogin.rejected, state => { state.toastData = { text: "Incorrect usrename or password!", status: 0, showToast: 1 } })
-            
+
             .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
             .addCase(taskUpdater.pending, state => { state.isLoading = true })
             .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
+
+            .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.name = action.payload[0].name, setCookie(JSON.stringify(action.payload[0])) })
+            .addCase(userDataUpdater.pending, state => { state.isLoading = true })
+            .addCase(userDataUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
     }
 })
 
