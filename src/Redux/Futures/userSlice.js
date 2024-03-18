@@ -40,22 +40,26 @@ export const taskUpdater = createAsyncThunk(
 
             let newUpdatedTasks
 
-            if (action == "delete") {
-                newUpdatedTasks = getParsedTodos(todos).filter(task => task.id != taskId)
-            } else if (action == "add") {
-                newUpdatedTasks = [...getState().user.userData.todos, newTodo];
-            } else {
-                newUpdatedTasks = getParsedTodos(todos)
+            switch (action) {
+                case "delete":
+                    newUpdatedTasks = getParsedTodos(todos).filter(task => task.id != taskId)
+                    break;
+                case "add":
+                    newUpdatedTasks = [...getState().user.userData.todos, newTodo];
+                    break;
+                default:
 
-                newUpdatedTasks.some(task => {
-                    if (task.id == taskId) {
-                        if (updatedTaskData?.title) {
-                            task.description = updatedTaskData.desc
-                            task.title = updatedTaskData.taskTitle
-                        } else task.isComplete = !task.isComplete
-                        return true
-                    }
-                })
+                    newUpdatedTasks = getParsedTodos(todos)
+                    newUpdatedTasks.some(task => {
+                        if (task.id == taskId) {
+                            if (updatedTaskData?.title) {
+                                task.description = updatedTaskData.desc
+                                task.title = updatedTaskData.taskTitle
+                            } else task.isComplete = !task.isComplete
+                            return true
+                        }
+                    })
+                    break;
             }
 
             const { data, error } = await supabase.from("users").update({ todos: newUpdatedTasks }).eq("id", id).select()
@@ -71,6 +75,7 @@ export const taskUpdater = createAsyncThunk(
         }
     }
 )
+
 export const userDataUpdater = createAsyncThunk(
     "user/userDataUpdater",
     async (infos, { getState }) => {
