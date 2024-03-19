@@ -115,6 +115,19 @@ export const userDataUpdater = createAsyncThunk(
     }
 )
 
+export const userProfileImgUploader = createAsyncThunk(
+    "user/userProfileUpdate",
+    async (file, { getState }) => {
+
+        const { id } = getState().user.userData
+
+        const { data, error } = await supabase.storage.from("profile").upload(`${id}_profile/${id}-user`, file)
+        if (error) throw new Error(error.message)
+
+        return `https://zltjwlhtphadvxmwanal.supabase.co/storage/v1/object/public/profile/${data.path}`
+    }
+)
+
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -144,6 +157,10 @@ const userSlice = createSlice({
             .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
             .addCase(taskUpdater.pending, state => { state.isLoading = true })
             .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
+
+            .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, JSON.stringify({ ...state.userData, userImg: userImg }) })
+            .addCase(userProfileImgUploader.pending, state => { state.isLoading = true })
+            .addCase(userProfileImgUploader.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
 
             .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(action.payload[0])) })
             .addCase(userDataUpdater.pending, state => { state.isLoading = true })

@@ -21,7 +21,7 @@ export default function Nav() {
                 <div>
                     <div className='mainNav flex items-center justify-between text-milky-dark'>
                         <div className='flex items-center gap-10 text-xs text-center pt-4 ch:py-2'>
-                            <Link to="/" className={`flex text-md ${activeNav == "#/" || activeNav.includes("task-edit") && "activeNav"} flex-col`}>
+                            <Link to="/" className={`flex text-md ${(activeNav == "#/" || activeNav.includes("task-edit")) && "activeNav"} flex-col`}>
                                 <div className='flex items-center pb-[3px] justify-center cursor-pointer'>
                                     <AiFillHome className='size-6' />
                                 </div>
@@ -50,7 +50,7 @@ export default function Nav() {
                         </div>
                     </div>
                 </div>
-                <div onClick={() => {dispatch(setAddTodoShow(true)), navigate("/")}} className='addTodo bg-primary size-[75px] rounded-full flex items-center justify-center cursor-pointer'><FaPlus className='size-6' /></div>
+                <div onClick={() => { dispatch(setAddTodoShow(true)), navigate("/") }} className='addTodo bg-primary size-[75px] rounded-full flex items-center justify-center cursor-pointer'><FaPlus className='size-6' /></div>
             </nav>
         </>
     )

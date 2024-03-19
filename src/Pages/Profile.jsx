@@ -2,18 +2,19 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaChevronRight, FaGithub, FaInstagram, FaTelegramPlane } from "react-icons/fa";
+import { IoLogOutOutline } from "react-icons/io5";
 import { LuUser2 } from "react-icons/lu";
 import { LuKeyRound } from "react-icons/lu";
 import { TiCameraOutline } from "react-icons/ti";
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { getCookie, getParsedTodos, showToast } from '../utils';
 import DataSetter from '../components/DataSetter';
-import { setToastData, userDataUpdater } from '../Redux/Futures/userSlice';
+import { setToastData, userDataUpdater, userProfileImgUploader } from '../Redux/Futures/userSlice';
 
 export default function Profile() {
 
     const { userImg, userData, isLoading, isLogin } = useSelector(state => state.user)
-
+    const navigate = useNavigate()
     if (!isLogin) return <Navigate to="/" />
 
     const [changeAcoundNameShow, setChangeAcoundNameShow] = useState("")
@@ -28,6 +29,10 @@ export default function Profile() {
     const [confirmNewPass, setConfirmNewPass] = useState("")
 
 
+    const logout = () => {
+        document.cookie = `userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`
+        navigate("/")
+    }
 
 
     const tasks = getParsedTodos(getCookie().todos)
@@ -57,6 +62,10 @@ export default function Profile() {
         }
     }
 
+    const newProfileHandler = e => {
+        dispatch(userProfileImgUploader(e.target.files[0]))
+    }
+
     const newNameUpdater = () => {
         if (currentName.trim().length < 4) {
             showToast(dispatch, "Name at least should contain 4 letters ! ", 0, 3000)
@@ -72,8 +81,8 @@ export default function Profile() {
 
             <div className=' flex items-center justify-center text-2xl m-auto ch:size-24 my-5 ch:border-2 ch:border-primary'>
                 {
-                    !userImg ?
-                        <img className=" cursor-pointer size-12 object-cover rounded-full" src="https://png.pngtree.com/background/20230530/original/pngtree-man-looking-for-a-good-mens-beauty-look-picture-image_2791625.jpg" alt="Profile" />
+                    userImg ?
+                        <img className=" cursor-pointer size-12 object-cover rounded-full" src={userImg} alt="Profile" />
                         :
                         <div className="flex items-center justify-center cursor-pointer bg-primary-gray rounded-full">{userData.name[0]}</div>
                 }
@@ -118,13 +127,20 @@ export default function Profile() {
                     <FaChevronRight className='size-5' />
                 </div>
                 <div className='flex items-center justify-between mb-4'>
-                    <div onClick={() => setChangeAcoundProfile(true)} className='flex items-center gap-2'>
+                    <label htmlFor='profile' onClick={() => setChangeAcoundProfile(true)} className='flex items-center gap-2'>
                         <TiCameraOutline className='size-7' />
                         Change account Image
-                    </div>
+                    </label>
+                    <input onChange={newProfileHandler} className='hidden' id='profile' type="file" />
                     <FaChevronRight className='size-5' />
                 </div>
+                <div onClick={logout} className="text-red-600 flex items-center gap-2 text-xl ">
+                    <IoLogOutOutline className='size-6 rotate-180' />
+                    Logout
+                </div>
             </div>
+
+
 
             <div className='mb-9'>
                 <div className=' text-milky-dark mb-3 '>Contact me</div>
@@ -135,11 +151,6 @@ export default function Profile() {
                 </div>
             </div>
 
-
-
-
-
-
             <DataSetter
                 topic="Change name"
                 children={<div className='flex flex-col w-full items-center gap-3 pt-8'><input onChange={e => setCurrentName(e.target.value)} value={currentName} className=' w-full py-3 rounded-sm bg-transparent border border-border px-2 ' placeholder='Enter your new name: '></input></div>}
@@ -148,7 +159,6 @@ export default function Profile() {
                 saveBtnText="Save"
                 show={changeAcoundNameShow}
             />
-
 
             <DataSetter
                 topic="Change password"

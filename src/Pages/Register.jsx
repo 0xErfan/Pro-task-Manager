@@ -25,7 +25,7 @@ export default function Register() {
         }
 
         try {
-            const { error } = await supabase.from("users").insert({ name: userName, password, todos: [] })
+            const { error } = await supabase.from("users").insert({ name: userName, password, todos: [], userImg: null })
 
             if (error) {
                 showToast(dispatch, "This username already exist!", 0)
