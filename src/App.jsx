@@ -3,11 +3,12 @@ import { useRoutes } from "react-router-dom"
 import appRoutes from "./routes"
 import useOnline from "./Hooks/useOnline"
 import { useDispatch, useSelector } from "react-redux"
-import { isOnlineChanger } from "./Redux/Futures/userSlice"
+import { isLoginSetter, isOnlineChanger, userProfileImgUploader } from "./Redux/Futures/userSlice"
 import { useEffect } from "react"
 import Toast from "./components/Toast"
 import OverlayFilter from "./components/OverlayFilter"
 import Nav from "./components/Nav"
+import { getCookie, setCookie } from "./utils"
 
 function App() {
 
@@ -15,8 +16,16 @@ function App() {
     const isOnline = useOnline()
     const dispatch = useDispatch()
 
-    const { userData, isLogin, toastData } = useSelector(store => store.user)
-    const { showToast, text, status, loader } = toastData
+    const { userData, isLogin, toastData, updater } = useSelector(store => store.user)
+    const { showToast, text, status, loader, userImg } = toastData
+
+    useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
+
+    useEffect(() => {
+        if (!updater) return
+        isLogin && dispatch(userProfileImgUploader({ action: "get" }))
+        console.log("userImgChange");
+    }, [updater, userImg])
 
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 

@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import supabase from "../../client";
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getCookie, getParsedTodos, setCookie } from "../../utils";
+import { getCookie, getParsedTodos, setCookie, showToast } from "../../utils";
 
 
 
 export const userLogin = createAsyncThunk(
     'user/userLogin',
-    async ({ userName, password, showToast, setCookie, reseter }) => {
+    async ({ userName, password, showToast, setCookie, reseter }, { dispatch }) => {
         try {
             const { data, error } = await supabase.from("users").select().eq("name", userName);
 
@@ -23,6 +23,7 @@ export const userLogin = createAsyncThunk(
             } else { throw new Error("Incorrect username or password."); }
 
         } catch (error) {
+            showToast(dispatch, "Incorrect username or password !", 0, 3000)
             console.log(error);
             throw error;
         }
@@ -78,7 +79,8 @@ export const taskUpdater = createAsyncThunk(
 
 export const userDataUpdater = createAsyncThunk(
     "user/userDataUpdater",
-    async (infos, { getState }) => {
+    async (infos, { getState, dispatch }) => {
+        showToast(dispatch, "Updating...", 1, 2000)
 
         const { id } = getState().user.userData
         const { action, newName, newPass } = infos
@@ -117,14 +119,28 @@ export const userDataUpdater = createAsyncThunk(
 
 export const userProfileImgUploader = createAsyncThunk(
     "user/userProfileUpdate",
-    async (file, { getState }) => {
+    async (info, { getState, dispatch }) => {
+        showToast(dispatch, "Uploading...", 1, 2000)
 
+        const { file, action } = info
         const { id } = getState().user.userData
 
-        const { data, error } = await supabase.storage.from("profile").upload(`${id}_profile/${id}-user`, file)
-        if (error) throw new Error(error.message)
 
-        return `https://zltjwlhtphadvxmwanal.supabase.co/storage/v1/object/public/profile/${data.path}`
+        try {
+            console.log(action);
+            const { data, error } = await supabase.storage.from("profile")[action == "get" ? "getPublicUrl" : "upload"](`${id}_profile/user_${id}_profile`, file || "", { upsert: true })
+
+            if (error) throw new Error(error.message)
+
+            dispatch(setUpdater())
+
+            console.log(data);
+            return data.publicUrl + `?id:${Math.random() * 9999}`
+
+        } catch (error) {
+            console.error("Async thunk error:", error);
+            throw error;
+        }
     }
 )
 
@@ -134,6 +150,7 @@ const userSlice = createSlice({
         isOnline: true,
         isLogin: false,
         isLoading: false,
+        updater: false,
         overlayShow: false,
         addTodoShow: false,
         userData: document.cookie.includes("userData") && JSON.parse(document.cookie.replace("userData=", "")),
@@ -142,6 +159,7 @@ const userSlice = createSlice({
     reducers: {
         isOnlineChanger: (state, action) => { state.isOnline = action.payload },
         setToastData: (state, action) => { state.toastData = action.payload },
+        setUpdater: state => { state.updater = !state.updater },
         setOverlayShow: (state, action) => { state.overlayShow = action.payload },
         setAddTodoShow: (state, action) => { state.addTodoShow = action.payload },
         isLoginSetter: (state, action) => { state.isLogin = action.payload ? true : false, state.userData = action.payload || getCookie() }
@@ -152,15 +170,14 @@ const userSlice = createSlice({
                 state.userData = action.payload;
                 location.href = "/"
             })
-            .addCase(userLogin.rejected, state => { state.toastData = { text: "Incorrect usrename or password!", status: 0, showToast: 1 } })
 
             .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
             .addCase(taskUpdater.pending, state => { state.isLoading = true })
             .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
 
-            .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, JSON.stringify({ ...state.userData, userImg: userImg }) })
+            .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, setCookie(JSON.stringify({ ...state.userData, userImg: action.payload })) })
             .addCase(userProfileImgUploader.pending, state => { state.isLoading = true })
-            .addCase(userProfileImgUploader.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
+            .addCase(userProfileImgUploader.rejected, (state, action) => { state.isLoading = false })
 
             .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(action.payload[0])) })
             .addCase(userDataUpdater.pending, state => { state.isLoading = true })
@@ -169,4 +186,4 @@ const userSlice = createSlice({
 })
 
 export default userSlice.reducer
-export const { isOnlineChanger, setToastData, isLoginSetter, setOverlayShow, setAddTodoShow } = userSlice.actions
+export const { isOnlineChanger, setToastData, isLoginSetter, setOverlayShow, setAddTodoShow, setUpdater } = userSlice.actions

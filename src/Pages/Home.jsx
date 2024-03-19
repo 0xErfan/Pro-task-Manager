@@ -18,7 +18,6 @@ export default function Home() {
     const [addTodoShown, setAddTodoShown] = useState(false)
 
     useEffect(() => setShownTodos(allUserTodos), [userData.todos])
-    useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
 
     let allUserTodos
     if (isLogin) allUserTodos = getParsedTodos(userData.todos)
@@ -46,8 +45,8 @@ export default function Home() {
                                 <CgSortAz className='size-8 cursor-pointer' />
                                 <h2 className='text-xl font-bold font-lato-bold text-primary'>UpTodo</h2>
                                 {
-                                    !userData?.userImg ?
-                                        <img onClick={() => navigate("/account")} className=' cursor-pointer size-12 object-cover rounded-full' src="https://fakeimg.pl/250x100/" alt="Profile" />
+                                    userData.userImg ?
+                                        <img onClick={() => navigate("/account")} className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
                                         :
                                         <div className='flex items-center justify-center size-12 rounded-full bg-dark-light text-xl font-bold'>{userData.name[0]}</div>
                                 }

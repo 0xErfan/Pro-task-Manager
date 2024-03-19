@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaChevronRight, FaGithub, FaInstagram, FaTelegramPlane } from "react-icons/fa";
@@ -13,9 +13,10 @@ import { setToastData, userDataUpdater, userProfileImgUploader } from '../Redux/
 
 export default function Profile() {
 
-    const { userImg, userData, isLoading, isLogin } = useSelector(state => state.user)
+    const { userData, isLoading, isLogin } = useSelector(state => state.user)
     const navigate = useNavigate()
-    if (!isLogin) return <Navigate to="/" />
+
+    // if (!isLogin) return <Navigate to="/" />
 
     const [changeAcoundNameShow, setChangeAcoundNameShow] = useState("")
     const [changeAcoundPassword, setChangeAcoundPassword] = useState("")
@@ -27,14 +28,13 @@ export default function Profile() {
 
     const [newPass, setNewPass] = useState("")
     const [confirmNewPass, setConfirmNewPass] = useState("")
-
+    
 
     const logout = () => {
         document.cookie = `userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`
         navigate("/")
     }
-
-
+    
     const tasks = getParsedTodos(getCookie().todos)
     const dispatch = useDispatch()
     const completedTasks = tasks.filter(task => task.isComplete).length
@@ -63,7 +63,11 @@ export default function Profile() {
     }
 
     const newProfileHandler = e => {
-        dispatch(userProfileImgUploader(e.target.files[0]))
+        const newImageFile = e.target.files[0]
+
+        if (newImageFile.type.includes("image")) {
+            dispatch(userProfileImgUploader({ file: newImageFile, action: "update" }))
+        } else showToast(dispatch, "Only image files acceptable !", 0, 2500)
     }
 
     const newNameUpdater = () => {
@@ -81,8 +85,8 @@ export default function Profile() {
 
             <div className=' flex items-center justify-center text-2xl m-auto ch:size-24 my-5 ch:border-2 ch:border-primary'>
                 {
-                    userImg ?
-                        <img className=" cursor-pointer size-12 object-cover rounded-full" src={userImg} alt="Profile" />
+                    userData.userImg ?
+                        <img className=" cursor-pointer size-12 object-cover rounded-full" key={userData.userImg} src={userData.userImg} alt="Profile" />
                         :
                         <div className="flex items-center justify-center cursor-pointer bg-primary-gray rounded-full">{userData.name[0]}</div>
                 }
@@ -131,7 +135,7 @@ export default function Profile() {
                         <TiCameraOutline className='size-7' />
                         Change account Image
                     </label>
-                    <input onChange={newProfileHandler} className='hidden' id='profile' type="file" />
+                    <input onChange={newProfileHandler} className='hidden' accept='' id='profile' type="file" />
                     <FaChevronRight className='size-5' />
                 </div>
                 <div onClick={logout} className="text-red-600 flex items-center gap-2 text-xl ">
