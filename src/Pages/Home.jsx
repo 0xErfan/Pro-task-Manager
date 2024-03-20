@@ -38,15 +38,17 @@ export default function Home() {
                     :
                     <>
                         <section className='container h-screen'>
-                            <div className='flex items-center justify-between my-6'>
+                            <div className='flex items-center justify-between my-4'>
                                 <CgSortAz className='size-8 cursor-pointer' />
                                 <h2 className='text-xl text-glow font-bold font-lato-bold text-primary'>TaskUp</h2>
-                                {
-                                    userData.userImg ?
-                                        <img onClick={() => navigate("/profile")} className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
-                                        :
-                                        <div className='flex items-center justify-center size-12 rounded-full bg-dark-light text-xl font-bold'>{userData.name[0]}</div>
-                                }
+                                <div onClick={() => navigate("/profile")} >
+                                    {
+                                        userData.userImg ?
+                                            <img className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
+                                            :
+                                            <div className='flex items-center justify-center size-12 rounded-full bg-dark-light text-xl font-bold'>{userData.name[0]}</div>
+                                    }
+                                </div>
                             </div>
                             {
                                 allUserTodos?.length ?
@@ -69,7 +71,7 @@ export default function Home() {
                                         {
                                             [...shownTodos].filter(task => task.isComplete).length ? (
                                                 <div className='space-y-4 pb-36'>
-                                                    <p className=' p-2 outline-none bg-primary-gray mt-4 w-28 h-10 rounded-md'>Completed</p>
+                                                    <p className=' p-2 outline-none bg-primary-gray mt-4 w-28 h-10 rounded-md text-center '>Completed</p>
                                                     {[...shownTodos].filter(task => task.isComplete).map(data => <Task key={data.id} {...data} />)}
                                                 </div>
                                             ) : null
