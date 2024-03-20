@@ -56,11 +56,15 @@ export const taskUpdater = createAsyncThunk(
                             if (updatedTaskData?.taskTitle) {
                                 task.description = updatedTaskData.desc
                                 task.title = updatedTaskData.taskTitle
-                            } else task.isComplete = !task.isComplete
+                            } else if (updatedTaskData?.isComplete) {
+                                task.isComplete = !task.isComplete
+                            } else if (updatedTaskData?.time) {
+                                task.time = updatedTaskData.time
+                            } else task.category = updatedTaskData.category
                             return true
                         }
                     })
-                    
+
                     break;
             }
 

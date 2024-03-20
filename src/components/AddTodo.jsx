@@ -39,7 +39,7 @@ export default function AddTodo() {
 
     const chosenPriorities = allUserTodos.filter(todo => todo.priority)
 
-    useEffect(() => { titleRef.current?.focus() }, [addTodoShow])
+    useEffect(() => { addTodoShow && titleRef.current?.focus() }, [addTodoShow])
     useEffect(() => { setActivePrio(allPriorities.find(value => !value.props.className.includes("opacity"))?.key) }, [userData.todos])
 
     const addNewTodo = () => {

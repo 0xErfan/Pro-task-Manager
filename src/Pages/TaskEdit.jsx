@@ -12,14 +12,25 @@ import { categoryList } from '../components/AddTodo';
 import { setOverlayShow, taskUpdater } from '../Redux/Futures/userSlice';
 import Button from '../components/Button';
 import DataSetter from '../components/DataSetter';
+import Slide from '../components/Slide';
 
 export default function TaskEdit() {
 
     const [isEditing, setIsEditing] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
 
+    const [taskTimer, setTaskTimer] = useState({ hour: 0, min: 0, time: "" })
+
     const [taskTitle, setTaskTitle] = useState("")
     const [desc, setDesc] = useState("")
+
+    const [isCategoriesShown, setIsCategoriesShown] = useState(false)
+    const [_category, setCategory] = useState("Home")
+
+    const [isTimerShown, setIsTimerShown] = useState(false)
+
+    const taskTimerUpdater = (prop, value) => { setTaskTimer({ ...taskTimer, [value]: prop }) }
+
 
     const taskId = useParams()
     const dispatch = useDispatch()
@@ -37,7 +48,11 @@ export default function TaskEdit() {
 
         if (action == "complete") {
             dispatch(taskUpdater({ taskId: taskId.id, action: "update" }))
-        } else dispatch(taskUpdater({ action: "update", taskId: taskId.id, data: { desc, taskTitle } }))
+        } else if (action == "title") {
+            dispatch(taskUpdater({ action: "update", taskId: taskId.id, data: { desc, taskTitle } }))
+        } else if (action == "time") {
+            dispatch(taskUpdater({ action: "update", taskId: taskId.id, data: { time: taskTimer } }))
+        } else dispatch(taskUpdater({ action: "update", taskId: taskId.id, data: { category: _category } }))
 
         setTaskTitle("")
     }
@@ -51,6 +66,7 @@ export default function TaskEdit() {
 
     return (
         <section className={`container ${isComplete && "ch:line-through opacity-50 ch:transition-all "} `}>
+
             <Link to="/"><IoMdClose className='bg-dark-light size-9 p-[6px] rounded-md my-6 cursor-pointer ' /></Link>
 
             <div className='flex items-center justify-between mt-12'>
@@ -65,7 +81,7 @@ export default function TaskEdit() {
 
             <div className='mt-10 space-y-10'>
 
-                <div className='flex items-center justify-between'>
+                <div onClick={() => setIsTimerShown(true)} className='flex items-center justify-between'>
                     <div className='flex items-center gap-[6px]'>
                         <MdOutlineTimer className='size-7' />
                         <p>Task Time :</p>
@@ -80,7 +96,7 @@ export default function TaskEdit() {
                     </div>
                 </div>
 
-                <div onClick={() => setCategoryShow(true)} className='flex items-center justify-between'>
+                <div onClick={() => setIsCategoriesShown(true)} className='flex items-center justify-between'>
                     <div className='flex items-center gap-[6px]'>
                         <IoPricetagsOutline className='size-6' />
                         <p>Task Category :</p>
@@ -114,7 +130,7 @@ export default function TaskEdit() {
                         </div>
                         <div className='flex items-center justify-between mt-6 w-full'>
                             <Button data={{ text: "Cancel", color: 1, fn: () => { setIsEditing(false) } }} />
-                            <Button data={{ text: "Save", fn: taskUpdate }} />
+                            <Button data={{ text: "Save", fn: () => taskUpdate("title") }} />
                         </div>
                     </div>
                 </div>
@@ -127,6 +143,48 @@ export default function TaskEdit() {
                     saveBtnFn={() => { dispatch(taskUpdater({ action: "delete", taskId: taskId.id })), setIsDeleting(false), navigate("/") }}
                     saveBtnText="Delete"
                     show={isDeleting}
+                />
+
+                {/* category getter */}
+                <DataSetter
+                    topic="Choose category"
+                    children={
+                        <div className='grid grid-cols-3 gap-6 mt-4 ch:size-16 bg-primary-gray'>
+                            {
+                                categoryList.map(data => <div
+                                    onClick={() => setCategory(data.catName)}
+                                    key={data.catName}
+                                >
+                                    <div className='flex flex-col items-center gap-1'>
+                                        <div style={{ backgroundColor: data.bgColor }} className={` ${_category == data.catName && "border-4 border-primary"} size-14 cursor-pointer flex items-center justify-center rounded-md transition-all`}>{data.svg}</div>
+                                        <p className='text-[13px] text-center'>{data.catName}</p>
+                                    </div>
+                                </div>)
+                            }
+                        </div>
+
+                    }
+                    cancelBtnFn={() => setIsCategoriesShown(false)}
+                    saveBtnFn={() => { taskUpdate(), setIsCategoriesShown(false) }}
+                    show={isCategoriesShown}
+                />
+
+                {/* time getter */}
+                <DataSetter
+                    topic="Choose time"
+                    children={
+                        <div className='flex items-center justify-center gap-3 pt-8'>
+                            <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'>
+                                <Slide start={1} stop={12} fn={data => taskTimerUpdater(data, "hour")} />
+                            </div>
+                            <span className='text-xl font-bold'>:</span>
+                            <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide start={0} stop={59} fn={data => taskTimerUpdater(data, "min")} /></div>
+                            <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide value={["AM", "PM"]} fn={data => taskTimerUpdater(data, "time")} /></div>
+                        </div>
+                    }
+                    cancelBtnFn={() => { setIsTimerShown(false) }}
+                    saveBtnFn={() => { taskUpdate("time"), setIsTimerShown(false) }}
+                    show={isTimerShown}
                 />
 
             </div>

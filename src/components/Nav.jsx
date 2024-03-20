@@ -14,7 +14,7 @@ export default function Nav() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     useEffect(() => steActiveNav(location.hash), [location.hash])
-    console.log(activeNav);
+    
     return (
         <>
             <nav className="navbar fixed w-full mt-10 right-0 left-0 px-4 bg-primary-gray bottom-0 z-20">

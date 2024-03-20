@@ -51,18 +51,18 @@ export default function Home() {
                             {
                                 allUserTodos?.length ?
                                     <>
-                                        <div className=''>
+                                        <div>
                                             <div className='flex gap-2 items-center h-12 rounded-[px] bg-dark-light px-3 border border-border/30'>
                                                 <IoSearch className='size-6' />
                                                 <input onChange={taskFilterHandler} className='outline-none w-full h-full bg-transparent' placeholder='Search for your task...' type="text" />
                                             </div>
                                         </div>
-                                        <select defaultValue="all" className=' flex items-center justify-center p-2 outline-none bg-primary-gray mt-4 w-28 h-10 rounded-md' onChange={e => console.log(e.target.value)}>
+                                        {/* <select defaultValue="all" className=' flex items-center justify-center p-2 outline-none bg-primary-gray mt-4 w-28 h-10 rounded-md' onChange={e => console.log(e.target.value)}>
                                             <option value="all">All</option>
                                             <option value="today">Today</option>
                                             <option value="tomorrow">Tomorrow</option>
-                                        </select>
-                                        <div className='space-y-4 mt-4 pb-[120px]'>
+                                        </select> */}
+                                        <div className='space-y-4 mt-8 pb-[120px]'>
                                             {activeTodos}
                                         </div>
 

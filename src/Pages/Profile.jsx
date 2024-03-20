@@ -30,7 +30,7 @@ export default function Profile() {
 
     const logout = () => {
         document.cookie = `userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`
-        navigate("/")
+        location.reload()
     }
 
     let tasks

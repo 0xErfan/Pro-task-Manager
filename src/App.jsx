@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import Toast from "./components/Toast"
 import OverlayFilter from "./components/OverlayFilter"
 import Nav from "./components/Nav"
-import { getCookie, setCookie } from "./utils"
+import { getCookie } from "./utils"
 
 function App() {
 
@@ -24,8 +24,9 @@ function App() {
     useEffect(() => {
         if (!updater) return
         isLogin && dispatch(userProfileImgUploader({ action: "get" }))
-        console.log("userImgChange");
     }, [updater, userImg])
+
+    useEffect(() => { isLogin && updater && dispatch(userProfileImgUploader({ action: "get" })) }, [isLogin])
 
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 
