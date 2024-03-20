@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Intro from '../components/Intro'
-import { getCookie, getParsedTodos } from '../utils'
-import { isLoginSetter } from '../Redux/Futures/userSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { getParsedTodos } from '../utils'
+import { useSelector } from 'react-redux'
 import { CgSortAz } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom'
 import { IoSearch } from "react-icons/io5";
@@ -11,11 +10,9 @@ import Task from '../components/Task'
 
 export default function Home() {
 
-    const dispatch = useDispatch()
     const { isLogin, userData } = useSelector(state => state.user)
     const navigate = useNavigate()
     const [shownTodos, setShownTodos] = useState([])
-    const [addTodoShown, setAddTodoShown] = useState(false)
 
     useEffect(() => setShownTodos(allUserTodos), [userData.todos])
 
@@ -43,10 +40,10 @@ export default function Home() {
                         <section className='container h-screen'>
                             <div className='flex items-center justify-between my-6'>
                                 <CgSortAz className='size-8 cursor-pointer' />
-                                <h2 className='text-xl font-bold font-lato-bold text-primary'>UpTodo</h2>
+                                <h2 className='text-xl text-glow font-bold font-lato-bold text-primary'>TaskUp</h2>
                                 {
                                     userData.userImg ?
-                                        <img onClick={() => navigate("/account")} className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
+                                        <img onClick={() => navigate("/profile")} className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
                                         :
                                         <div className='flex items-center justify-center size-12 rounded-full bg-dark-light text-xl font-bold'>{userData.name[0]}</div>
                                 }
@@ -71,7 +68,7 @@ export default function Home() {
 
                                         {
                                             [...shownTodos].filter(task => task.isComplete).length ? (
-                                                <div className='space-y-4'>
+                                                <div className='space-y-4 pb-36'>
                                                     <p className=' p-2 outline-none bg-primary-gray mt-4 w-28 h-10 rounded-md'>Completed</p>
                                                     {[...shownTodos].filter(task => task.isComplete).map(data => <Task key={data.id} {...data} />)}
                                                 </div>

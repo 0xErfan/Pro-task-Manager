@@ -29,7 +29,7 @@ export default function Intro() {
                                 fill="#8685E7"
                             />
                         </svg>
-                        <h2 className='font-lato-bold font-bold text-[40px] text-milky text-center '>UpTodo</h2>
+                        <h2 className='font-lato-bold font-bold text-[40px] text-milky text-center '>TaskUp</h2>
                     </div>
                     :
                     <Onbording />

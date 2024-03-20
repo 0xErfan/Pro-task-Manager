@@ -53,13 +53,14 @@ export const taskUpdater = createAsyncThunk(
                     newUpdatedTasks = getParsedTodos(todos)
                     newUpdatedTasks.some(task => {
                         if (task.id == taskId) {
-                            if (updatedTaskData?.title) {
+                            if (updatedTaskData?.taskTitle) {
                                 task.description = updatedTaskData.desc
                                 task.title = updatedTaskData.taskTitle
                             } else task.isComplete = !task.isComplete
                             return true
                         }
                     })
+                    
                     break;
             }
 
@@ -106,8 +107,7 @@ export const userDataUpdater = createAsyncThunk(
             const { data, error } = await supabase.from("users").update({ [userDataProp]: updatedData }).eq("id", id).select()
 
             if (error) { throw new Error(error.message) }
-
-            console.log(data);
+            dispatch(setUpdater())
             return data
 
         } catch (error) {
@@ -171,17 +171,11 @@ const userSlice = createSlice({
                 location.href = "/"
             })
 
-            .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify(action.payload[0])) })
-            .addCase(taskUpdater.pending, state => { state.isLoading = true })
-            .addCase(taskUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
+            .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify({ ...state.userData, todos: action.payload[0].todos })) })
 
             .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, setCookie(JSON.stringify({ ...state.userData, userImg: action.payload })) })
-            .addCase(userProfileImgUploader.pending, state => { state.isLoading = true })
-            .addCase(userProfileImgUploader.rejected, (state, action) => { state.isLoading = false })
 
             .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(action.payload[0])) })
-            .addCase(userDataUpdater.pending, state => { state.isLoading = true })
-            .addCase(userDataUpdater.rejected, (state, action) => { console.log(action.error), state.isLoading = false })
     }
 })
 

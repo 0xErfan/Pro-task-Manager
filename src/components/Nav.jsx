@@ -19,8 +19,8 @@ export default function Nav() {
         <>
             <nav className="navbar fixed w-full mt-10 right-0 left-0 px-4 bg-primary-gray bottom-0 z-20">
                 <div>
-                    <div className='mainNav flex items-center justify-between text-milky-dark'>
-                        <div className='flex items-center gap-10 text-xs text-center pt-4 ch:py-2'>
+                    <div className='mainNav flex items-center justify-between text-milky-dark px-3 '>
+                        <div className='flex items-center gap-10 text-xs text-center pt-2 ch:py-3'>
                             <Link to="/" className={`flex text-md ${(activeNav == "#/" || activeNav.includes("task-edit")) && "activeNav"} flex-col`}>
                                 <div className='flex items-center pb-[3px] justify-center cursor-pointer'>
                                     <AiFillHome className='size-6' />
@@ -34,7 +34,7 @@ export default function Nav() {
                                 Calender
                             </Link>
                         </div>
-                        <div className='flex items-center gap-10 text-xs text-center pt-4 ch:py-2'>
+                        <div className='flex items-center gap-10 text-xs text-center pt-2 ch:py-3'>
                             <Link to="/focus" className={`flex ${activeNav.includes("focus") && "activeNav"} flex-col`}>
                                 <div className='flex items-center pb-[3px] justify-center cursor-pointer'>
                                     <MdAccessTime className='size-6' />

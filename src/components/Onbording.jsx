@@ -49,7 +49,7 @@ export default function Onbording() {
 
 const OnbordingData = [
     { index: 0, title: "Manage your tasks", text: "You can easily manage all of your daily tasks in DoMe for free", imageSrc: "/Images/Managment.png" },
-    { index: 1, title: "Create daily routine", text: "In Uptodo  you can create your personalized routine to stay productive", imageSrc: "/Images/Routine.png" },
+    { index: 1, title: "Create daily routine", text: "In TaskUp  you can create your personalized routine to stay productive", imageSrc: "/Images/Routine.png" },
     { index: 2, title: "Orgonaize your tasks", text: "You can organize your daily tasks by adding your tasks into separate categories", imageSrc: "/Images/Orgonaize.png" },
-    { index: 3, title: "Welcome to UpTodo", text: "Please login to your account or create new account to continue" }
+    { index: 3, title: "Welcome to TaskUp", text: "Please login to your account or create new account to continue" }
 ]

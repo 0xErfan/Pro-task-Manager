@@ -29,12 +29,16 @@ export default function TaskEdit() {
     !userTasks.length && (userTasks = getCookie().todos)
     userTasks = getParsedTodos(userTasks)
 
-    const { title, description, time = null, category, priority } = userTasks.find(task => task.id == taskId.id)
+    const { title, description, time = null, category, priority, isComplete } = userTasks.find(task => task.id == taskId.id)
     const taskStats = checkTaskStatus(time)
 
-    const taskUpdate = () => {
+    const taskUpdate = action => {
         setIsEditing(false)
-        dispatch(taskUpdater({ action: "update", taskId: taskId.id, data: { desc, taskTitle } }))
+
+        if (action == "complete") {
+            dispatch(taskUpdater({ taskId: taskId.id, action: "update" }))
+        } else dispatch(taskUpdater({ action: "update", taskId: taskId.id, data: { desc, taskTitle } }))
+
         setTaskTitle("")
     }
 
@@ -46,12 +50,12 @@ export default function TaskEdit() {
 
 
     return (
-        <section className='container'>
-            <Link to="/"><IoMdClose className=' bg-dark-light size-9 p-[6px] rounded-md my-6 cursor-pointer ' /></Link>
+        <section className={`container ${isComplete && "ch:line-through opacity-50 ch:transition-all "} `}>
+            <Link to="/"><IoMdClose className='bg-dark-light size-9 p-[6px] rounded-md my-6 cursor-pointer ' /></Link>
 
             <div className='flex items-center justify-between mt-12'>
                 <div className='flex items-center gap-4'>
-                    <FaRegCircle />
+                    <FaRegCircle className={`${isComplete && "bg-primary"} rounded-full size-5 `} onClick={() => taskUpdate("complete")} />
                     <h3 className='text-xl font-lato-bold'>{title}</h3>
                 </div>
                 <BiEditAlt onClick={showTaskEditor} className='size-7' />
