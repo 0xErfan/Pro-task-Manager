@@ -49,8 +49,6 @@ function checkTaskStatus(time) {
 
     todoDateTime.setHours(userHour, userMin, 0, 0);
 
-    console.log(new Date(time.date));
-
     if (todoDateTime > currentDateTime) { return "Today" }
 
     // if (todoDateTime * 12 * 60 * 60 * 1000 > currentDateTime && time.time == "PM") { return "Tomorrow" }
