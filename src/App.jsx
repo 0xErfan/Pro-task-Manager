@@ -31,12 +31,12 @@ function App() {
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 
     return (
-        <>
+        <main className=" max-w-[500px] w-full " >
             {routes}
             <Toast showToast={showToast} text={text} status={status} loader={loader} />
             <OverlayFilter />
             {userData?.id && <Nav />}
-        </>
+        </main>
     )
 }
 

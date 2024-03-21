@@ -27,7 +27,11 @@ export const userLogin = createAsyncThunk(
 
             const { data, error } = await supabase.from("users").select().eq("name", userName);
 
-            if (error) { throw new Error(error) }
+            if (error) {
+                showToast(dispatch, "Incorrect usrename or password!", 0, 2000)
+                throw new Error(error)
+            }
+
 
             if (data.length === 1 && data[0].password === password) {
                 setCookie(JSON.stringify(data[0]), 20);
@@ -126,7 +130,7 @@ export const userDataUpdater = createAsyncThunk(
 
             if (error) throw new Error(error.message)
 
-            dispatch(setUpdater())
+            // dispatch(setUpdater())
             return data
 
         } catch (error) { throw error }
@@ -173,7 +177,7 @@ const userSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(userLogin.fulfilled, (state, action) => { state.userData = action.payload, location.href = "/" })
+            .addCase(userLogin.fulfilled, (state, action) => { state.userData = action.payload, location.href = "https://0xErfan.github.io/Pro-task-Manager/" })
             .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify({ ...state.userData, todos: action.payload[0].todos })) })
             .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, setCookie(JSON.stringify({ ...state.userData, userImg: action.payload })) })
             .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(action.payload[0])) })

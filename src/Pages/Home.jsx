@@ -82,7 +82,7 @@ export default function Home() {
 
                                     :
                                     <div className='mt-40'>
-                                        <img className='block m-auto max-s-[277px] s-full' src="/Images/Checklist-rafiki 1.png" />
+                                        <img className='block m-auto max-s-[277px] s-full' src="Images/Checklist-rafiki 1.png" />
                                         <h5 className=' text-[20px] font-bold text-center mt-2'>What do you want to do today?</h5>
                                         <p className='text-center text-md text-milky mt-2'>Tap + to add your tasks</p>
                                     </div>
