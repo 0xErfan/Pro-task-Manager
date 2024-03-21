@@ -34,6 +34,7 @@ body {
     width: 3rem;
     border-radius: 3px;
     height: 1.4px;
+    top: 85%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #222;

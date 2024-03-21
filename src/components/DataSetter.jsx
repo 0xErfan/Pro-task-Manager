@@ -5,7 +5,7 @@ export default function DataSetter({ topic, children, cancelBtnFn, saveBtnFn, sh
     
     return (
         <div className={`${show && "h-screen fixed transition-all backdrop-blur-[2px] inset-0 z-40"}`}>
-            <div className={` ${!show && "hidden"} addPrioruty flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
+            <div className={` ${!show && "hidden"} centered flex flex-col items-center h-auto bg-primary-gray w-[93%] rounded-md p-4`}>
                 <p className='text-center border-b w-full border-border pb-2'>{topic}</p>
                 {children}
                 <div className='flex items-center justify-between mt-6 w-full'>

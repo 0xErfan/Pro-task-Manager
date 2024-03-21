@@ -55,7 +55,7 @@ export default function AddTodo() {
             description,
             priority: prioChosen ? activePrio : null,
             category: categoryChosen ? category : null,
-            time: isTimerAdded ? { ...taskTimer, hour: taskTimer.hour + 1, date: new Date().getDate() } : null,
+            time: isTimerAdded ? { ...taskTimer, hour: taskTimer.hour + 1, date: new Date() } : null,
             isComplete: false
         }
 

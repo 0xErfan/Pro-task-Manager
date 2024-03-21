@@ -49,7 +49,7 @@ function checkTaskStatus(time) {
 
     todoDateTime.setHours(userHour, userMin, 0, 0);
 
-    console.log(todoDateTime + "\n" + currentDateTime);
+    console.log(new Date(time.date));
 
     if (todoDateTime > currentDateTime) { return "Today" }
 
@@ -58,6 +58,28 @@ function checkTaskStatus(time) {
     if (todoDateTime.getDay() == currentDateTime.getDay() && todoDateTime < currentDateTime) { return "Passed" }
 
 }
+// function checkTaskStatus(time) {
+//     if (!time) return;
+//     !time.time && (time.time = "AM")
+
+//     const currentDateTime = new Date();
+
+//     const userHour = time.hour + (time.time === "PM" ? 12 : 0); // Convert to 24-hour format if PM
+//     const userMin = time.min;
+//     const todoDateTime = new Date(time.date);
+
+//     todoDateTime.setHours(userHour, userMin, 0, 0);
+
+//     const differenceInMilliseconds = todoDateTime.getTime() - currentDateTime.getTime();
+//     const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+//     console.log(differenceInDays);
+
+//     if (differenceInDays == 0) return "Today"
+//     if (differenceInDays == 1) return "Tomorrow"
+//     if (differenceInDays < 0) return "Passed"
+
+// }
 
 export {
     showToast,
