@@ -49,14 +49,15 @@ function checkTaskStatus(time) {
 
     todoDateTime.setHours(userHour, userMin, 0, 0);
 
+    console.log(todoDateTime + "\n" + currentDateTime);
+
     if (todoDateTime > currentDateTime) { return "Today" }
 
-    if (todoDateTime * 12 * 60 * 60 * 1000 > currentDateTime && time.time == "PM") { return "Tomorrow" }
+    // if (todoDateTime * 12 * 60 * 60 * 1000 > currentDateTime && time.time == "PM") { return "Tomorrow" }
+    if ((todoDateTime.getHours() <= 12 && todoDateTime < currentDateTime) || (todoDateTime.getHours() > 12 && todoDateTime < currentDateTime && time.time == "AM")) { return "Tomorrow" }
+    if (todoDateTime.getDay() == currentDateTime.getDay() && todoDateTime < currentDateTime) { return "Passed" }
 
-    if (todoDateTime < currentDateTime) { return "Passed" }
 }
-
-
 
 export {
     showToast,
