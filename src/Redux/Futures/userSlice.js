@@ -8,6 +8,7 @@ const initialState = {
     isLogin: false,
     isLoading: false,
     updater: false,
+    imgError: false,
     overlayShow: false,
     addTodoShow: false,
     userData: document.cookie.includes("userData") && JSON.parse(document.cookie.replace("userData=", "")),
@@ -28,6 +29,7 @@ export const userLogin = createAsyncThunk(
             const { data, error } = await supabase.from("users").select().eq("name", userName);
 
             if (error) {
+                console.log(error.message);
                 showToast(dispatch, "Incorrect usrename or password!", 0, 2000)
                 throw new Error(error)
             }
@@ -128,12 +130,15 @@ export const userDataUpdater = createAsyncThunk(
 
             const { data, error } = await supabase.from("users").update({ [userDataProp]: updatedData }).eq("id", id).select()
 
-            if (error) throw new Error(error.message)
+            if (error) {
+                showToast(dispatch, "This username aleready exists !", 0, 2500)
+                throw new Error(error.message)
+            }
 
             dispatch(setUpdater())
             return data
 
-        } catch (error) { throw error }
+        } catch (error) { throw error, console.log("ff"); }
     }
 )
 
@@ -153,7 +158,6 @@ export const userProfileImgUploader = createAsyncThunk(
             const { file, action } = info
             const { id } = getState().user.userData
             const { data, error } = await supabase.storage.from("profile")[action == "get" ? "getPublicUrl" : "upload"](`${id}_profile/user_${id}_profile`, file || "", { upsert: true })
-
             if (error) throw new Error(error.message)
 
             dispatch(setUpdater())
@@ -172,7 +176,8 @@ const userSlice = createSlice({
         setToastData: (state, action) => { state.toastData = action.payload },
         setOverlayShow: (state, action) => { state.overlayShow = action.payload },
         setAddTodoShow: (state, action) => { state.addTodoShow = action.payload },
-        setUpdater: state => { state.updater = true },
+        setUpdater: state => { state.updater = !state.updater },
+        setImgError: (state, action) => { state.imgError = action.payload },
         isLoginSetter: (state, action) => { state.isLogin = action.payload ? true : false, state.userData = action.payload || getCookie() }
     },
     extraReducers: builder => {
@@ -185,4 +190,4 @@ const userSlice = createSlice({
 })
 
 export default userSlice.reducer
-export const { isOnlineChanger, setToastData, isLoginSetter, setOverlayShow, setAddTodoShow, setUpdater } = userSlice.actions
+export const { isOnlineChanger, setToastData, isLoginSetter, setOverlayShow, setAddTodoShow, setUpdater, setImgError } = userSlice.actions

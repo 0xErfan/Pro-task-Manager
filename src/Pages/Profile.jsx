@@ -9,11 +9,11 @@ import { TiCameraOutline } from "react-icons/ti";
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { getCookie, getParsedTodos, showToast } from '../utils';
 import DataSetter from '../components/DataSetter';
-import { setToastData, userDataUpdater, userProfileImgUploader } from '../Redux/Futures/userSlice';
+import { setImgError, setToastData, setUpdater, userDataUpdater, userProfileImgUploader } from '../Redux/Futures/userSlice';
 
 export default function Profile() {
 
-    const { userData, isLoading, isLogin } = useSelector(state => state.user)
+    const { userData, isLoading, isLogin, imgError } = useSelector(state => state.user)
     const navigate = useNavigate()
 
     const [changeAcoundNameShow, setChangeAcoundNameShow] = useState("")
@@ -89,7 +89,7 @@ export default function Profile() {
                     <div className=' flex items-center justify-center text-2xl m-auto ch:size-24 my-5 ch:border-2 ch:border-primary'>
                         {
                             userData.userImg ?
-                                <img className=" cursor-pointer size-12 object-cover rounded-full" key={userData.userImg} src={userData.userImg} alt="Profile" />
+                                <img onError={() => dispatch(setImgError())} className=" cursor-pointer size-12 object-cover rounded-full" key={userData.userImg} src={userData.userImg} alt="Profile" />
                                 :
                                 <div className="flex items-center justify-center cursor-pointer bg-primary-gray rounded-full">{userData.name[0]}</div>
                         }

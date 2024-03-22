@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import Intro from '../components/Intro'
 import { getParsedTodos } from '../utils'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { CgSortAz } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom'
 import { IoSearch } from "react-icons/io5";
 import AddTodo from '../components/AddTodo'
 import Task from '../components/Task'
+import { setImgError } from '../Redux/Futures/userSlice';
 
 export default function Home() {
 
-    const { isLogin, userData } = useSelector(state => state.user)
+    const { isLogin, userData, imgError } = useSelector(state => state.user)
     const navigate = useNavigate()
     const [shownTodos, setShownTodos] = useState([])
-
+    const dispatch = useDispatch()
     useEffect(() => setShownTodos(allUserTodos), [userData.todos])
 
     let allUserTodos
@@ -44,7 +45,7 @@ export default function Home() {
                                 <div onClick={() => navigate("/profile")} >
                                     {
                                         userData.userImg ?
-                                            <img className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
+                                            <img onError={() => dispatch(setImgError())} className=' cursor-pointer size-12 object-cover rounded-full' src={userData.userImg} alt="Profile" />
                                             :
                                             <div className='flex items-center justify-center size-12 rounded-full bg-dark-light text-xl font-bold'>{userData.name[0]}</div>
                                     }
