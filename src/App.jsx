@@ -26,7 +26,7 @@ function App() {
         isLogin && dispatch(userProfileImgUploader({ action: "get" }))
     }, [updater, userImg])
 
-    useEffect(() => { isLogin && updater && dispatch(userProfileImgUploader({ action: "get" })) }, [isLogin])
+    useEffect(() => { isLogin && updater && userImg && dispatch(userProfileImgUploader({ action: "get" })) }, [isLogin, userImg])
 
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 

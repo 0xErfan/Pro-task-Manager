@@ -130,7 +130,7 @@ export const userDataUpdater = createAsyncThunk(
 
             if (error) throw new Error(error.message)
 
-            // dispatch(setUpdater())
+            dispatch(setUpdater())
             return data
 
         } catch (error) { throw error }
@@ -172,7 +172,7 @@ const userSlice = createSlice({
         setToastData: (state, action) => { state.toastData = action.payload },
         setOverlayShow: (state, action) => { state.overlayShow = action.payload },
         setAddTodoShow: (state, action) => { state.addTodoShow = action.payload },
-        setUpdater: state => { state.updater = !state.updater },
+        setUpdater: state => { state.updater = true },
         isLoginSetter: (state, action) => { state.isLogin = action.payload ? true : false, state.userData = action.payload || getCookie() }
     },
     extraReducers: builder => {
