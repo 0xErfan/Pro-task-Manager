@@ -90,7 +90,7 @@ export default function TaskEdit() {
                     <div className=' bg-primary-gray p-2 rounded-md' >
                         {
                             time ?
-                                taskStats != "Passed" ? taskStats + " At " + padStarter(time.hour) + ":" + padStarter(time.min) : "Passed"
+                                taskStats != "Passed" ? taskStats + " At " + padStarter(time.hour + 1) + ":" + padStarter(time.min) : "Passed"
                                 : <div>Not set</div>
                         }
                     </div>
