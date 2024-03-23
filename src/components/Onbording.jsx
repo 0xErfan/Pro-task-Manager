@@ -38,7 +38,7 @@ export default function Onbording() {
             <h4 className='font-lato-bold font-bold text-[32px] text-milky text-center mb-10'>{currentPageData?.title}</h4>
             <h6 className='font-lato text-[16px] text-milky text-center'>{currentPageData?.text}</h6>
 
-            <div className={`flex items-center ${page == 3 ? "flex-col-reverse gap-4" : "gap-34"} justify-between absolute bottom-2 left-0 p-5 w-full`}>
+            <div className={`flex items-center max-w-[500px] m-auto ${page == 3 ? "flex-col-reverse gap-4" : "gap-34"} justify-between absolute bottom-2 left-1/2 -translate-x-[50%]  p-5 w-full`}>
                 {page > 0 && <Button data={{ text: page == 3 ? "Create Account" : "BACK", color: 1, border: page == 3, fn: prevePageHandler }} />}
                 {<Button data={{ text: page == 2 ? "GET STARTED" : page == 3 ? "Login" : "NEXT", fn: nextPageHandler }} />}
             </div>

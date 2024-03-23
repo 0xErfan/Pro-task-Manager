@@ -4,8 +4,9 @@ import Input from '../components/Input'
 import Button from "../components/Button"
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { showToast } from "../utils"
+import { getCookie, showToast } from "../utils"
 import supabase from "../client"
+import { isLoginSetter, userLogin } from '../Redux/Futures/userSlice'
 
 export default function Register() {
 
@@ -63,12 +64,7 @@ export default function Register() {
 
             showToast(dispatch, "Your account registered successfully.", 1)
 
-            setTimeout(() => {
-                setPassword("")
-                setUserName("")
-                setRepeatPassword("")
-                navigate("/login")
-            }, 2000);
+            setTimeout(() => { dispatch(userLogin({ userName, password })) }, 1500);
 
         } catch (error) {
             console.log(error);
@@ -78,7 +74,7 @@ export default function Register() {
     return (
         <>
             {
-                isLogin ? <Navigate to="" />
+                isLogin ? <Navigate to="/" />
                     :
                     <section className='container'>
                         <button onClick={() => navigate("/")} className='text-milky block mr-auto my-5 ch:size-6'><IoIosArrowBack /></button>

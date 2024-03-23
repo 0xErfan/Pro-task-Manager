@@ -30,7 +30,7 @@ export default function Login() {
             return;
         }
 
-        dispatch(userLogin({ userName, password, showToast, setCookie, reseter }))
+        dispatch(userLogin({ userName, password, reseter }))
     };
 
 

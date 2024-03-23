@@ -17,7 +17,7 @@ const initialState = {
 
 export const userLogin = createAsyncThunk(
     'user/userLogin',
-    async ({ userName, password, showToast, setCookie, reseter }, { dispatch }) => {
+    async ({ userName, password, reseter }, { dispatch }) => {
 
         try {
 
@@ -35,12 +35,15 @@ export const userLogin = createAsyncThunk(
             }
 
 
-            if (data && data.length === 1 && data[0].password === password) {
+            if (data && data.length && data[0].password === password) {
                 setCookie(JSON.stringify(data[0]), 20);
-                reseter();
-                showToast(dispatch, "Incorrect usrename or password!", 0, 3000)
+                reseter && reseter();
+                showToast(dispatch, "You logged in successfully !", 1, 3000)
                 return data[0];
-            } else { showToast(dispatch, "Incorrect usrename or password!", 0, 2000) }
+            } else {
+                showToast(dispatch, "Incorrect usrename or password!", 0, 2000)
+                throw new Error("error")
+            }
 
         } catch (error) { throw new Error(error) }
     }
@@ -181,7 +184,7 @@ const userSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(userLogin.fulfilled, (state, action) => { state.userData = action.payload, location.href = "https://0xErfan.github.io/Pro-task-Manager/" })
+            .addCase(userLogin.fulfilled, (state, action) => { state.userData = action.payload, location.reload() })
             .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify({ ...state.userData, todos: action.payload[0].todos })) })
             .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, setCookie(JSON.stringify({ ...state.userData, userImg: action.payload })) })
             .addCase(userDataUpdater.fulfilled, (state, action) => {
