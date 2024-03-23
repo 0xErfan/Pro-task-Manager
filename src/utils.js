@@ -49,35 +49,13 @@ function checkTaskStatus(time) {
 
     todoDateTime.setHours(userHour, userMin, 0, 0);
 
-    if (todoDateTime > currentDateTime) { return "Today" }
+    if (todoDateTime > currentDateTime) { return "Today" } else { return "Tomorrow" }
 
     // if (todoDateTime * 12 * 60 * 60 * 1000 > currentDateTime && time.time == "PM") { return "Tomorrow" }
-    if ((todoDateTime.getHours() <= 12 && todoDateTime < currentDateTime) || (todoDateTime.getHours() > 12 && todoDateTime < currentDateTime && time.time == "AM")) { return "Tomorrow" }
-    if (todoDateTime.getDay() == currentDateTime.getDay() && todoDateTime < currentDateTime) { return "Passed" }
+    // if ((todoDateTime.getHours() <= 12 && todoDateTime < currentDateTime) || (todoDateTime.getHours() > 12 && todoDateTime < currentDateTime && time.time == "AM")) { return "Tomorrow" }
+    // if (todoDateTime.getDay() == currentDateTime.getDay() && todoDateTime < currentDateTime) { return "Passed" }
 
 }
-// function checkTaskStatus(time) {
-//     if (!time) return;
-//     !time.time && (time.time = "AM")
-
-//     const currentDateTime = new Date();
-
-//     const userHour = time.hour + (time.time === "PM" ? 12 : 0); // Convert to 24-hour format if PM
-//     const userMin = time.min;
-//     const todoDateTime = new Date(time.date);
-
-//     todoDateTime.setHours(userHour, userMin, 0, 0);
-
-//     const differenceInMilliseconds = todoDateTime.getTime() - currentDateTime.getTime();
-//     const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-//     console.log(differenceInDays);
-
-//     if (differenceInDays == 0) return "Today"
-//     if (differenceInDays == 1) return "Tomorrow"
-//     if (differenceInDays < 0) return "Passed"
-
-// }
 
 export {
     showToast,

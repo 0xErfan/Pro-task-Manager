@@ -40,7 +40,7 @@ export const userLogin = createAsyncThunk(
                 reseter();
                 showToast(dispatch, "Incorrect usrename or password!", 0, 3000)
                 return data[0];
-            } else { throw new Error("Incorrect username or password."); }
+            } else { showToast(dispatch, "Incorrect usrename or password!", 0, 2000) }
 
         } catch (error) { throw error; }
     }
@@ -108,7 +108,7 @@ export const userDataUpdater = createAsyncThunk(
                 throw new Error()
             }
 
-            const { id } = getState().user.userData
+            const { id, userImg } = getState().user.userData
             const { action, newName, newPass } = infos
 
             let userDataProp, updatedData
@@ -135,10 +135,9 @@ export const userDataUpdater = createAsyncThunk(
                 throw new Error(error.message)
             }
 
-            dispatch(setUpdater())
-            return data
+            return { ...data, userImg: getState().user.userData.userImg }
 
-        } catch (error) { throw error, console.log("ff"); }
+        } catch (error) { throw error }
     }
 )
 
@@ -185,7 +184,11 @@ const userSlice = createSlice({
             .addCase(userLogin.fulfilled, (state, action) => { state.userData = action.payload, location.href = "https://0xErfan.github.io/Pro-task-Manager/" })
             .addCase(taskUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData.todos = action.payload[0].todos, setCookie(JSON.stringify({ ...state.userData, todos: action.payload[0].todos })) })
             .addCase(userProfileImgUploader.fulfilled, (state, action) => { state.isLoading = false, state.userData.userImg = action.payload, setCookie(JSON.stringify({ ...state.userData, userImg: action.payload })) })
-            .addCase(userDataUpdater.fulfilled, (state, action) => { state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(action.payload[0])) })
+            .addCase(userDataUpdater.fulfilled, (state, action) => {
+                const data = action.payload[0]
+                data.userImg = action.payload.userImg
+                state.isLoading = false, state.userData = action.payload[0], setCookie(JSON.stringify(data))
+            })
     }
 })
 
