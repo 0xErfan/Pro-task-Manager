@@ -88,7 +88,7 @@ export default function AddTodo() {
 
     return (
         <>
-            <div className={`z-40 min-h-[228px] bg-primary-gray w-full left-0 fixed px-3  transition-all ${addTodoShow ? "bottom-0 opacity-100" : "opacity-0 -bottom-[258px]"}  rounded-t-2xl`}>
+            <div className={`z-40 min-h-[228px] max-w-[500px] left-[50%] -translate-x-[50%] bg-primary-gray w-full fixed px-3  transition-all ${addTodoShow ? "bottom-0 opacity-100" : "opacity-0 -bottom-[258px]"}  rounded-t-2xl`}>
                 <h4 className=" flex items-center gap-1 text-[18px] font-lato-bold ch:size-7 p-4 text-primary">Add task <TiTickOutline /></h4>
                 <input
                     value={title}

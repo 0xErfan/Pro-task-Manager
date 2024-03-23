@@ -13,7 +13,7 @@ export default function Focus() {
         !isLogin ?
           <Navigate to="/" />
           :
-          <div className=' font-lato-bold font-bold text-xl text-center mt-12'>Focus future will add soon!</div>
+          <div className=' font-lato-bold font-bold text-xl text-center pt-24'>Focus feature will add soon!</div>
       }
     </>
   )

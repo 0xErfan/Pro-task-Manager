@@ -32,13 +32,13 @@ export default function Home() {
         .map(data => <Task key={data.id} {...data} />)
 
     return (
-        <main>
+        <section>
             {
                 !isLogin ?
                     <Intro />
                     :
                     <>
-                        <section className='container h-screen'>
+                        <section className='container h-screen overflow-y-auto '>
                             <div className='flex items-center justify-between my-4'>
                                 <CgSortAz className='size-8 cursor-pointer' />
                                 <h2 className='text-xl text-glow font-bold font-lato-bold text-primary'>TaskUp</h2>
@@ -93,6 +93,6 @@ export default function Home() {
                     </>
             }
             {/* <Nav /> */}
-        </main>
+        </section>
     )
 }

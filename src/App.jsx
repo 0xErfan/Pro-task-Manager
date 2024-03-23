@@ -31,7 +31,7 @@ function App() {
     useEffect(() => { dispatch(isOnlineChanger(isOnline)) }, [isOnline])
 
     return (
-        <main className=" max-w-[500px] w-full " >
+        <main className=" max-w-[500px] w-full ch:m-auto h-screen m-auto md:border md:border-red-400/10 " >
             {routes}
             <Toast showToast={showToast} text={text} status={status} loader={loader} />
             <OverlayFilter />
