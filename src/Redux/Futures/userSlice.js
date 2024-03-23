@@ -35,14 +35,14 @@ export const userLogin = createAsyncThunk(
             }
 
 
-            if (data.length === 1 && data[0].password === password) {
+            if (data && data.length === 1 && data[0].password === password) {
                 setCookie(JSON.stringify(data[0]), 20);
                 reseter();
                 showToast(dispatch, "Incorrect usrename or password!", 0, 3000)
                 return data[0];
             } else { showToast(dispatch, "Incorrect usrename or password!", 0, 2000) }
 
-        } catch (error) { throw error; }
+        } catch (error) { throw new Error(error) }
     }
 );
 
