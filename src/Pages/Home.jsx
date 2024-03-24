@@ -18,7 +18,7 @@ export default function Home() {
 
     useEffect(() => setShownTodos(allUserTodos), [userData.todos])
 
-    useEffect(() => { !isLogin && dispatch(userProfileImgUploader({ action: "get" })) }, []) // load user profile after login
+    useEffect(() => { isLogin && dispatch(userProfileImgUploader({ action: "get" })) }, []) // load user profile after login
 
     let allUserTodos
     if (isLogin) allUserTodos = getParsedTodos(userData.todos)

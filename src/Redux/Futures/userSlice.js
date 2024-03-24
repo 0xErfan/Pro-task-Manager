@@ -155,9 +155,10 @@ export const userProfileImgUploader = createAsyncThunk(
                 throw new Error()
             }
 
-            showToast(dispatch, "Updating...", 1, 2500)
-
             const { file, action } = info
+
+            file && showToast(dispatch, "Updating...", 1, 2500)
+            
             const { id } = getState().user.userData
             const { data, error } = await supabase.storage.from("profile")[action == "get" ? "getPublicUrl" : "upload"](`${id}_profile/user_${id}_profile`, file || "", { upsert: true })
             if (error) throw new Error(error.message)
