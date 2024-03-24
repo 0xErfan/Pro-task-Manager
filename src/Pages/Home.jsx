@@ -7,15 +7,18 @@ import { useNavigate } from 'react-router-dom'
 import { IoSearch } from "react-icons/io5";
 import AddTodo from '../components/AddTodo'
 import Task from '../components/Task'
-import { setImgError } from '../Redux/Futures/userSlice';
+import { setImgError, userProfileImgUploader } from '../Redux/Futures/userSlice';
 
 export default function Home() {
 
-    const { isLogin, userData, imgError } = useSelector(state => state.user)
-    const navigate = useNavigate()
+    const { isLogin, userData } = useSelector(state => state.user)
     const [shownTodos, setShownTodos] = useState([])
+    const navigate = useNavigate()
     const dispatch = useDispatch()
+
     useEffect(() => setShownTodos(allUserTodos), [userData.todos])
+
+    useEffect(() => { !isLogin && dispatch(userProfileImgUploader({ action: "get" })) }, []) // load user profile after login
 
     let allUserTodos
     if (isLogin) allUserTodos = getParsedTodos(userData.todos)

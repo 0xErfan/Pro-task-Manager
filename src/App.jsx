@@ -21,12 +21,9 @@ function App() {
 
     useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
 
-    useEffect(() => { dispatch(userProfileImgUploader({ action: "get" })) }, []) // load user profile after login
-
     useEffect(() => {
         if (!updater) return
         isLogin && dispatch(userProfileImgUploader({ action: "get" }))
-        dispatch(setUpdater())
     }, [updater])
 
     useEffect(() => { isLogin && userImg && dispatch(userProfileImgUploader({ action: "get" })) }, [isLogin, userImg])
