@@ -4,9 +4,9 @@ import Input from '../components/Input'
 import Button from "../components/Button"
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getCookie, showToast } from "../utils"
+import { showToast } from "../utils"
 import supabase from "../client"
-import { isLoginSetter, userLogin } from '../Redux/Futures/userSlice'
+import { userLogin } from '../Redux/Futures/userSlice'
 
 export default function Register() {
 
@@ -66,9 +66,7 @@ export default function Register() {
 
             setTimeout(() => { dispatch(userLogin({ userName, password })) }, 1500);
 
-        } catch (error) {
-            console.log(error);
-        }
+        } catch (error) { console.log(error) }
     }
 
     return (

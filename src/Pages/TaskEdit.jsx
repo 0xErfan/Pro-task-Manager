@@ -79,7 +79,7 @@ export default function TaskEdit() {
 
             <p className=' text-milky-dark max-h-[320px] overflow-y-auto pl-8 mt-4'>{description} </p>
 
-            <div className='mt-10 space-y-10'>
+            <div className='mt-10 space-y-10 ch:max-w-[500px] ch:w-full ch:m-auto '>
 
                 <div onClick={() => setIsTimerShown(true)} className='flex items-center justify-between'>
                     <div className='flex items-center gap-[6px]'>
@@ -90,7 +90,7 @@ export default function TaskEdit() {
                     <div className=' bg-primary-gray p-2 rounded-md' >
                         {
                             time ?
-                                taskStats != "Passed" ? taskStats + " At " + padStarter(time.hour + 1) + ":" + padStarter(time.min) : "Passed"
+                                taskStats != "Passed" ? taskStats + " At " + padStarter(time.hour) + ":" + padStarter(time.min) : "Passed"
                                 : <div>Not set</div>
                         }
                     </div>
@@ -125,7 +125,7 @@ export default function TaskEdit() {
                         <div className='flex flex-col w-full items-center gap-3 pt-8'>
 
                             <input onChange={e => setTaskTitle(e.target.value)} className=' bg-dark-light py-3 w-full px-3 rounded-md ' value={taskTitle} type="text" />
-                            <input onChange={e => setDesc(e.target.value)} className=' bg-dark-light py-3 w-full px-3 rounded-md ' value={desc} type="text" />
+                            <textarea onChange={e => setDesc(e.target.value)} className=' bg-dark-light py-3 w-full min-h-24 resize-none overflow-y-auto px-3 rounded-md ' value={desc} type="text" />
 
                         </div>
                         <div className='flex items-center justify-between mt-6 w-full'>
@@ -175,7 +175,7 @@ export default function TaskEdit() {
                     children={
                         <div className='flex items-center justify-center gap-3 pt-8'>
                             <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'>
-                                <Slide start={1} stop={12} fn={data => taskTimerUpdater(data, "hour")} />
+                                <Slide start={1} stop={12} fn={data => taskTimerUpdater(data + 1, "hour")} />
                             </div>
                             <span className='text-xl font-bold'>:</span>
                             <div className='size-16 flex items-center justify-center rounded-md bg-[#272727]'><Slide start={0} stop={59} fn={data => taskTimerUpdater(data, "min")} /></div>

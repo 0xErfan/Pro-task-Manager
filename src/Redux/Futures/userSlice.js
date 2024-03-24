@@ -155,7 +155,7 @@ export const userProfileImgUploader = createAsyncThunk(
                 throw new Error()
             }
 
-            showToast(dispatch, "Uploading...", 1, 2000)
+            showToast(dispatch, "Updating...", 1, 2500)
 
             const { file, action } = info
             const { id } = getState().user.userData

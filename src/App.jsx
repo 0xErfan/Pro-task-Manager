@@ -3,7 +3,7 @@ import { useRoutes } from "react-router-dom"
 import appRoutes from "./routes"
 import useOnline from "./Hooks/useOnline"
 import { useDispatch, useSelector } from "react-redux"
-import { isLoginSetter, isOnlineChanger, userProfileImgUploader } from "./Redux/Futures/userSlice"
+import { isLoginSetter, isOnlineChanger, setUpdater, userProfileImgUploader } from "./Redux/Futures/userSlice"
 import { useEffect } from "react"
 import Toast from "./components/Toast"
 import OverlayFilter from "./components/OverlayFilter"
@@ -21,9 +21,12 @@ function App() {
 
     useEffect(() => { dispatch(isLoginSetter(getCookie())) }, [])
 
+    useEffect(() => { dispatch(userProfileImgUploader({ action: "get" })) }, []) // load user profile after login
+
     useEffect(() => {
         if (!updater) return
         isLogin && dispatch(userProfileImgUploader({ action: "get" }))
+        dispatch(setUpdater())
     }, [updater])
 
     useEffect(() => { isLogin && userImg && dispatch(userProfileImgUploader({ action: "get" })) }, [isLogin, userImg])
